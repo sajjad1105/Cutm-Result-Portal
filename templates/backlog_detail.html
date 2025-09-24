@@ -1,0 +1,1350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title> CUTM Result Portal </title>
+  <!-- <link rel="icon" type="image/x-icon" href="https://github.com/AYUSHRAHUL/cutm-result-portal/blob/main/templates/spinner.jpg?raw=true"> -->
+
+  <!-- jQuery -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <!-- Bootstrap CSS -->
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <!-- AOS Animation -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" rel="stylesheet">
+
+  <style>
+    :root {
+      --primary-color: #0f172a;
+      --secondary-color: #1e293b;
+      --accent-color: #3b82f6;
+      --accent-hover: #2563eb;
+      --success-color: #10b981;
+      --warning-color: #f59e0b;
+      --danger-color: #ef4444;
+      --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      --gradient-secondary: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+      --gradient-accent: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      --text-light: #ffffff;
+      --text-muted: #94a3b8;
+      --text-dark: #1e293b;
+      --glass-bg: rgba(255, 255, 255, 0.08);
+      --glass-border: rgba(255, 255, 255, 0.15);
+      --shadow-light: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+      --shadow-medium: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+      --shadow-heavy: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--gradient-primary);
+      color: var(--text-light);
+      overflow-x: hidden;
+      line-height: 1.6;
+      min-height: 100vh;
+      position: relative;
+    }
+
+    /* Enhanced animated background */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: 
+        radial-gradient(circle at 25% 25%, rgba(99, 102, 241, 0.15) 0%, transparent 50%),
+        radial-gradient(circle at 75% 25%, rgba(168, 85, 247, 0.15) 0%, transparent 50%),
+        radial-gradient(circle at 25% 75%, rgba(34, 197, 94, 0.15) 0%, transparent 50%),
+        radial-gradient(circle at 75% 75%, rgba(251, 146, 60, 0.15) 0%, transparent 50%);
+      z-index: -2;
+      animation: bgFloat 20s ease-in-out infinite;
+    }
+
+    @keyframes bgFloat {
+      0%, 100% { transform: rotate(0deg) scale(1); opacity: 1; }
+      25% { transform: rotate(1deg) scale(1.02); opacity: 0.8; }
+      50% { transform: rotate(-0.5deg) scale(0.98); opacity: 0.9; }
+      75% { transform: rotate(0.5deg) scale(1.01); opacity: 0.85; }
+    }
+
+    /* Floating geometric shapes */
+    .geometric-bg {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      overflow: hidden;
+    }
+
+    .shape {
+      position: absolute;
+      opacity: 0.1;
+      animation: float 15s ease-in-out infinite;
+    }
+
+    .shape:nth-child(1) {
+      top: 10%;
+      left: 10%;
+      animation-delay: -2s;
+      animation-duration: 20s;
+    }
+
+    .shape:nth-child(2) {
+      top: 20%;
+      right: 10%;
+      animation-delay: -4s;
+      animation-duration: 18s;
+    }
+
+    .shape:nth-child(3) {
+      bottom: 20%;
+      left: 15%;
+      animation-delay: -6s;
+      animation-duration: 22s;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      33% { transform: translateY(-30px) rotate(120deg); }
+      66% { transform: translateY(-60px) rotate(240deg); }
+    }
+
+    /* Enhanced navbar */
+    .navbar {
+      background: rgba(15, 23, 42, 0.95);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--glass-border);
+      padding: 20px 0;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      position: fixed;
+      width: 100%;
+      top: 0;
+      z-index: 1000;
+    }
+
+    .navbar.scrolled {
+      background: rgba(15, 23, 42, 0.98);
+      padding: 15px 0;
+      box-shadow: var(--shadow-medium);
+    }
+
+    .navbar-brand {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: var(--text-light) !important;
+      display: flex;
+      align-items: center;
+      transition: all 0.3s ease;
+    }
+
+    .navbar-brand:hover {
+      transform: scale(1.05);
+    }
+
+    .navbar-brand img {
+      margin-right: 15px;
+      border-radius: 12px;
+      box-shadow: var(--shadow-light);
+      transition: all 0.3s ease;
+    }
+
+    .navbar-brand:hover img {
+      box-shadow: var(--shadow-medium);
+      transform: rotate(5deg);
+    }
+
+    .navbar .nav-link {
+      color: var(--text-muted) !important;
+      font-weight: 500;
+      margin: 0 5px;
+      padding: 12px 20px !important;
+      border-radius: 50px;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .navbar .nav-link::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.2), transparent);
+      transition: left 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .navbar .nav-link:hover::before {
+      left: 100%;
+    }
+
+    .navbar .nav-link:hover {
+      color: var(--text-light) !important;
+      background: rgba(59, 130, 246, 0.15);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-light);
+    }
+
+    .navbar .nav-link.active {
+      color: var(--accent-color) !important;
+      background: rgba(59, 130, 246, 0.1);
+    }
+
+    /* Main container */
+    .main-container {
+      min-height: 100vh;
+      padding-top: 120px;
+      padding-bottom: 80px;
+    }
+
+    /* Breadcrumb navigation */
+    .breadcrumb-nav {
+      background: var(--glass-bg);
+      backdrop-filter: blur(15px);
+      border: 1px solid var(--glass-border);
+      border-radius: 50px;
+      padding: 12px 30px;
+      display: inline-flex;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 30px;
+      font-size: 0.9rem;
+    }
+
+    .breadcrumb-nav a {
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+
+    .breadcrumb-nav a:hover {
+      color: var(--accent-color);
+    }
+
+    .breadcrumb-nav .current {
+      color: var(--accent-color);
+      font-weight: 600;
+    }
+
+    /* Main card */
+    .main-card {
+      background: var(--glass-bg);
+      backdrop-filter: blur(25px);
+      border: 1px solid var(--glass-border);
+      border-radius: 32px;
+      padding: 50px 40px;
+      box-shadow: var(--shadow-heavy);
+      transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .main-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.5), transparent);
+    }
+
+    /* Header section */
+    .header-section {
+      text-align: center;
+      margin-bottom: 50px;
+      position: relative;
+    }
+
+    .header-icon {
+      width: 80px;
+      height: 80px;
+      background: linear-gradient(135deg, var(--accent-color), var(--accent-hover));
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 30px;
+      font-size: 2rem;
+      color: white;
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); box-shadow: 0 0 20px rgba(59, 130, 246, 0.4); }
+      50% { transform: scale(1.05); box-shadow: 0 0 30px rgba(59, 130, 246, 0.6); }
+    }
+
+    .main-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 800;
+      margin-bottom: 20px;
+      background: linear-gradient(135deg, #ffffff, var(--accent-color));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      line-height: 1.2;
+    }
+
+    .subtitle {
+      font-size: 1.2rem;
+      color: var(--text-muted);
+      margin-bottom: 30px;
+    }
+
+    /* Message styling */
+    .message {
+      background: rgba(239, 68, 68, 0.15);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      border-radius: 16px;
+      padding: 20px;
+      margin: 30px 0;
+      color: #fca5a5;
+      font-weight: 600;
+      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 15px;
+      font-size: 1.1rem;
+    }
+
+    .message i {
+      font-size: 1.5rem;
+      color: var(--danger-color);
+    }
+
+    /* Debug section */
+    .debug-section {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 12px;
+      padding: 20px;
+      margin: 20px 0;
+      font-family: 'Courier New', monospace;
+      font-size: 0.9rem;
+    }
+
+    .debug-section h5 {
+      color: var(--warning-color);
+      margin-bottom: 10px;
+    }
+
+    /* Table search */
+    .table-search {
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .table-search input {
+      max-width: 400px;
+      margin: 0 auto;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: white;
+      border-radius: 25px;
+      padding: 12px 20px;
+      transition: all 0.3s ease;
+    }
+
+    .table-search input:focus {
+      outline: none;
+      border-color: var(--accent-color);
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+      background: rgba(255, 255, 255, 0.15);
+    }
+
+    .table-search input::placeholder {
+      color: rgba(255, 255, 255, 0.6);
+    }
+
+    /* Enhanced table styling */
+    .table-container {
+      margin: 40px 0;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: var(--shadow-medium);
+      background: var(--glass-bg);
+      backdrop-filter: blur(15px);
+      border: 1px solid var(--glass-border);
+    }
+
+    .modern-table {
+      width: 100%;
+      margin: 0;
+      background: transparent;
+      border-collapse: separate;
+      border-spacing: 0;
+    }
+
+    .modern-table thead {
+      background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(37, 99, 235, 0.2));
+      backdrop-filter: blur(10px);
+    }
+
+    .modern-table th {
+      padding: 20px 16px;
+      text-align: center;
+      border: none;
+      color: var(--text-light);
+      font-weight: 700;
+      font-size: 0.95rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      position: relative;
+    }
+
+    .modern-table th::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    }
+
+    .modern-table td {
+      padding: 18px 16px;
+      text-align: center;
+      border: none;
+      color: var(--text-light);
+      font-weight: 500;
+      font-size: 0.95rem;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+
+    .modern-table tbody tr {
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .modern-table tbody tr:last-child {
+      border-bottom: none;
+    }
+
+    .modern-table tbody tr:hover {
+      background: rgba(59, 130, 246, 0.1);
+      transform: scale(1.01);
+      box-shadow: 0 4px 15px rgba(59, 130, 246, 0.2);
+    }
+
+    .modern-table tbody tr:hover td {
+      color: var(--text-light);
+    }
+
+    /* Grade styling */
+    .grade-cell {
+      font-weight: 700;
+      padding: 8px 16px !important;
+      border-radius: 12px;
+      display: inline-block;
+      min-width: 60px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .grade-a, .grade-s { background: rgba(16, 185, 129, 0.2); color: #10b981; }
+    .grade-b { background: rgba(34, 197, 94, 0.2); color: #22c55e; }
+    .grade-c { background: rgba(245, 158, 11, 0.2); color: #f59e0b; }
+    .grade-d, .grade-f { background: rgba(239, 68, 68, 0.2); color: #ef4444; }
+    .grade-p { background: rgba(59, 130, 246, 0.2); color: #3b82f6; }
+
+    /* Stats cards */
+    .stats-section {
+      margin: 50px 0;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+    }
+
+    .stat-card {
+      background: var(--glass-bg);
+      backdrop-filter: blur(15px);
+      border: 1px solid var(--glass-border);
+      border-radius: 20px;
+      padding: 30px 20px;
+      text-align: center;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .stat-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      background: linear-gradient(90deg, var(--accent-color), var(--success-color));
+      transform: scaleX(0);
+      transition: transform 0.3s ease;
+    }
+
+    .stat-card:hover::before {
+      transform: scaleX(1);
+    }
+
+    .stat-card:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--shadow-heavy);
+    }
+
+    .stat-icon {
+      font-size: 2rem;
+      color: var(--accent-color);
+      margin-bottom: 15px;
+    }
+
+    .stat-number {
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--text-light);
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    .stat-label {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+
+    /* Enhanced buttons */
+    .btn-back {
+      background: linear-gradient(135deg, var(--accent-color), var(--accent-hover));
+      border: none;
+      color: white;
+      font-weight: 700;
+      font-size: 16px;
+      border-radius: 50px;
+      padding: 15px 35px;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      box-shadow: var(--shadow-medium);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 40px;
+    }
+
+    .btn-back::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      transition: left 0.6s;
+    }
+
+    .btn-back:hover::before {
+      left: 100%;
+    }
+
+    .btn-back:hover {
+      transform: translateY(-3px) scale(1.05);
+      box-shadow: var(--shadow-heavy);
+      background: linear-gradient(135deg, var(--accent-hover), #1d4ed8);
+      color: white;
+      text-decoration: none;
+    }
+
+    .btn-download {
+      background: linear-gradient(135deg, var(--success-color), #059669);
+      margin-left: 15px;
+    }
+
+    .btn-download:hover {
+      background: linear-gradient(135deg, #059669, #047857);
+    }
+
+    /* Progress Bar */
+    .progress-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--accent-color), var(--success-color));
+      z-index: 9999;
+      transition: width 0.25s ease;
+    }
+
+    /* Loading overlay */
+    .loading-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: var(--gradient-primary);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+      transition: opacity 0.5s ease;
+    }
+
+    .loader {
+      width: 60px;
+      height: 60px;
+      border: 3px solid rgba(255, 255, 255, 0.3);
+      border-top: 3px solid var(--accent-color);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    .loading-text {
+      color: var(--text-light);
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-top: 20px;
+      animation: pulse-text 2s ease-in-out infinite;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    @keyframes pulse-text {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.6; }
+    }
+
+    /* Scroll to top button */
+    .scroll-to-top {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      width: 60px;
+      height: 60px;
+      background: linear-gradient(135deg, var(--accent-color), var(--accent-hover));
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      z-index: 1000;
+      opacity: 0;
+      visibility: hidden;
+      box-shadow: var(--shadow-medium);
+    }
+
+    .scroll-to-top.show {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .scroll-to-top:hover {
+      transform: scale(1.1) translateY(-2px);
+      box-shadow: var(--shadow-heavy);
+    }
+
+    /* N/A styling */
+    .na-text {
+      opacity: 0.6;
+      font-style: italic;
+      color: var(--text-muted);
+    }
+
+    /* Responsive design */
+    @media (max-width: 768px) {
+      .main-container {
+        padding-top: 100px;
+        padding-bottom: 60px;
+      }
+
+      .main-card {
+        padding: 30px 20px;
+        margin: 0 15px;
+        border-radius: 24px;
+      }
+
+      .table-container {
+        margin: 20px -20px;
+        border-radius: 0;
+        overflow-x: auto;
+      }
+
+      .modern-table {
+        min-width: 700px;
+      }
+
+      .modern-table th,
+      .modern-table td {
+        padding: 12px 8px;
+        font-size: 0.85rem;
+      }
+
+      .stats-section {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+        margin: 30px 0;
+      }
+
+      .stat-card {
+        padding: 20px 15px;
+      }
+
+      .stat-number {
+        font-size: 1.5rem;
+      }
+
+      .btn-back {
+        width: 100%;
+        justify-content: center;
+        margin-top: 30px;
+      }
+
+      .btn-download {
+        width: 100%;
+        margin: 10px 0 0 0;
+      }
+
+      .table-search input {
+        max-width: 100%;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .stats-section {
+        grid-template-columns: 1fr;
+      }
+
+      .header-icon {
+        width: 60px;
+        height: 60px;
+        font-size: 1.5rem;
+      }
+
+      .main-title {
+        font-size: 1.8rem;
+      }
+
+      .subtitle {
+        font-size: 1rem;
+      }
+    }
+
+    /* Print styles */
+    @media print {
+      .navbar,
+      .breadcrumb-nav,
+      .btn-back,
+      .btn-download,
+      .scroll-to-top,
+      .debug-section,
+      .table-search {
+        display: none !important;
+      }
+
+      .main-card {
+        box-shadow: none;
+        border: 1px solid #ddd;
+        background: white;
+        color: black;
+      }
+
+      .modern-table th,
+      .modern-table td {
+        color: black;
+        border: 1px solid #ddd;
+      }
+
+      .stats-section {
+        page-break-inside: avoid;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Loading Overlay -->
+  <div class="loading-overlay" id="loadingOverlay">
+    <div class="loader"></div>
+    <div class="loading-text">Loading Backlog Details...</div>
+  </div>
+
+  <!-- Progress Bar -->
+  <div class="progress-bar" id="progressBar"></div>
+
+  <!-- Geometric Background -->
+  <div class="geometric-bg">
+    <div class="shape">
+      <svg width="100" height="100" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M50 10 L90 30 L90 70 L50 90 L10 70 L10 30 Z" fill="currentColor"/>
+      </svg>
+    </div>
+    <div class="shape">
+      <svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="40" cy="40" r="35" fill="currentColor"/>
+      </svg>
+    </div>
+    <div class="shape">
+      <svg width="120" height="120" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="10" y="10" width="100" height="100" rx="20" fill="currentColor"/>
+      </svg>
+    </div>
+  </div>
+
+  <!-- Enhanced Navbar -->
+  <header>
+    <nav class="navbar navbar-expand-lg" id="mainNavbar">
+      <div class="container">
+        <a class="navbar-brand" href="{{ url_for('home') }}">
+          <img src="https://gajajyoti.cutm.ac.in/img/images-removebg-preview.png" alt="CUTM Logo" height="45"> 
+          CUTM Portal
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav">
+          <span><i class="fas fa-bars text-white"></i></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="{{ url_for('home') }}">
+                <i class="fas fa-home"></i> Home
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{{ url_for('home') }}#features">
+                <i class="fas fa-star"></i> Features
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" href="{{ url_for('backlog') }}">
+                <i class="fas fa-history"></i> Backlog
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{{ url_for('admin_login') }}">
+                <i class="fas fa-user-shield"></i> Admin
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{{ url_for('about') }}">
+                <i class="fas fa-info-circle"></i> About
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#footer">
+                <i class="fas fa-envelope"></i> Contact
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <!-- Main Container -->
+  <div class="main-container">
+    <div class="container">
+      <!-- Breadcrumb Navigation -->
+      <div class="text-center mb-4" data-aos="fade-up">
+        <div class="breadcrumb-nav">
+          <a href="{{ url_for('home') }}"><i class="fas fa-home"></i> Home</a>
+          <i class="fas fa-chevron-right"></i>
+          <a href="{{ url_for('backlog') }}">Backlog Search</a>
+          <i class="fas fa-chevron-right"></i>
+          <span class="current">Results</span>
+        </div>
+      </div>
+
+      <!-- Main Card -->
+      <div class="main-card" data-aos="zoom-in" data-aos-duration="800">
+        <!-- Header Section -->
+        <div class="header-section">
+          <div class="header-icon">
+            <i class="fas fa-clipboard-list"></i>
+          </div>
+          <h1 class="main-title">Backlog Assessment Details</h1>
+          <p class="subtitle">Complete overview of pending academic requirements</p>
+        </div>
+
+        <!-- Debug Info (Remove in production) -->
+        {% if result and result|length > 0 %}
+          <div class="debug-section" style="display: none;" id="debugInfo">
+            <h5><i class="fas fa-bug"></i> Debug Information</h5>
+            <p><strong>Total rows:</strong> {{ result|length }}</p>
+            <p><strong>First row structure:</strong> {{ result[0] }}</p>
+            <p><strong>Row length:</strong> {{ result[0]|length }}</p>
+            <p><strong>Sample data types:</strong> 
+              {% for item in result[0] %}
+                {{ item.__class__.__name__ }}{% if not loop.last %}, {% endif %}
+              {% endfor %}
+            </p>
+          </div>
+          <div class="text-center mb-3">
+            <button class="btn btn-sm btn-outline-warning" onclick="toggleDebug()">
+              <i class="fas fa-code"></i> Toggle Debug Info
+            </button>
+          </div>
+        {% endif %}
+
+        <!-- Message Display -->
+        {% if message %}
+          <div class="message" data-aos="fade-in">
+            <i class="fas fa-exclamation-triangle"></i>
+            <span>{{ message }}</span>
+          </div>
+        {% endif %}
+
+        <!-- Results Display -->
+        {% if result and result|length > 0 %}
+          <!-- Statistics Cards -->
+          <div class="stats-section" data-aos="fade-up" data-aos-delay="200">
+            <div class="stat-card">
+              <div class="stat-icon">
+                <i class="fas fa-book"></i>
+              </div>
+              <div class="stat-number">{{ result|length }}</div>
+              <div class="stat-label">Total Subjects</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon">
+                <i class="fas fa-credit-card"></i>
+              </div>
+              <div class="stat-number">
+                {% set total_credits = 0 %}
+                {% for row in result %}
+                  {% if row|length > 6 and row[6] is not none and row[6] != '' %}
+                    {% set total_credits = total_credits + (row[6]|int if row[6]|string|regex_match('^\d+$') else 0) %}
+                  {% elif row|length > 7 and row[7] is not none and row[7] != '' %}
+                    {% set total_credits = total_credits + (row[7]|int if row[7]|string|regex_match('^\d+$') else 0) %}
+                  {% endif %}
+                {% endfor %}
+                {{ total_credits }}
+              </div>
+              <div class="stat-label">Total Credits</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon">
+                <i class="fas fa-calendar-alt"></i>
+              </div>
+              <div class="stat-number">
+                {% set semesters = [] %}
+                {% for row in result %}
+                  {% if row|length > 2 and row[2] not in semesters %}
+                    {% set _ = semesters.append(row[2]) %}
+                  {% endif %}
+                {% endfor %}
+                {{ semesters|length }}
+              </div>
+              <div class="stat-label">Semesters</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon">
+                <i class="fas fa-user-graduate"></i>
+              </div>
+              <div class="stat-number">
+                {{ result[0][0] if result[0]|length > 0 else 'N/A' }}
+              </div>
+              <div class="stat-label">Reg Number</div>
+            </div>
+          </div>
+
+          <!-- Table Search -->
+          <div class="table-search" data-aos="fade-up" data-aos-delay="300">
+            <input type="text" id="tableSearch" class="form-control" 
+                   placeholder="🔍 Search subjects, codes, grades, or any table data...">
+          </div>
+
+          <!-- Enhanced Table -->
+          <div class="table-container" data-aos="fade-up" data-aos-delay="400">
+            <table class="modern-table">
+              <thead>
+                <tr>
+                  <th><i class="fas fa-id-badge"></i> Reg No</th>
+                  <th><i class="fas fa-user"></i> Name</th>
+                  <th><i class="fas fa-calendar"></i> Semester</th>
+                  <th><i class="fas fa-code"></i> Subject Code</th>
+                  <th><i class="fas fa-book-open"></i> Subject Name</th>
+                  <th><i class="fas fa-credit-card"></i> Credits</th>
+                  <th><i class="fas fa-award"></i> Grade</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for row in result %}
+                  <tr data-aos="fade-in" data-aos-delay="{{ loop.index * 50 }}">
+                    <td>
+                      <strong>{{ row[0] if row|length > 0 and row[0] is not none and row[0] != '' else 'N/A' }}</strong>
+                    </td>
+                    <td>
+                      {% set name = row[1] if row|length > 1 and row[1] is not none and row[1] != '' else 'N/A' %}
+                      {% if name == 'N/A' %}
+                        <span class="na-text">{{ name }}</span>
+                      {% else %}
+                        {{ name }}
+                      {% endif %}
+                    </td>
+                    <td>
+                      {% set semester = row[2] if row|length > 2 and row[2] is not none and row[2] != '' else 'N/A' %}
+                      {% if semester == 'N/A' %}
+                        <span class="badge badge-secondary na-text">{{ semester }}</span>
+                      {% else %}
+                        <span class="badge badge-primary">{{ semester }}</span>
+                      {% endif %}
+                    </td>
+                    <td>
+                      {% set subject_code = row[3] if row|length > 3 and row[3] is not none and row[3] != '' else 'N/A' %}
+                      {% if subject_code == 'N/A' %}
+                        <span class="na-text">{{ subject_code }}</span>
+                      {% else %}
+                        <code>{{ subject_code }}</code>
+                      {% endif %}
+                    </td>
+                    <td>
+                      {% set subject_name = row[4] if row|length > 4 and row[4] is not none and row[4] != '' else 'N/A' %}
+                      {% if subject_name == 'N/A' %}
+                        <span class="na-text">{{ subject_name }}</span>
+                      {% else %}
+                        {{ subject_name }}
+                      {% endif %}
+                    </td>
+                    <td>
+                      {% set credits = row[6] if row|length > 6 and row[6] is not none and row[6] != '' else (row[7] if row|length > 7 and row[7] is not none and row[7] != '' else 'N/A') %}
+                      {% if credits == 'N/A' %}
+                        <span class="na-text">{{ credits }}</span>
+                      {% else %}
+                        <strong>{{ credits }}</strong>
+                      {% endif %}
+                    </td>
+                    <td>
+                      {% set grade = row[8] if row|length > 8 and row[8] is not none and row[8] != '' else (row[6] if row|length > 6 and row[6] is not none and row[6] != '' and row[6]|string|length <= 2 else (row[5] if row|length > 5 and row[5] is not none and row[5] != '' and row[5]|string|length <= 2 else 'F')) %}
+                      <span class="grade-cell grade-{{ grade|lower if grade != 'N/A' else 'f' }}" 
+                            title="{{ grade_explanations.get(grade, 'Unknown Grade') if grade != 'N/A' else 'No grade available' }}">
+                        {{ grade }}
+                      </span>
+                    </td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="text-center" data-aos="fade-up" data-aos-delay="600">
+            <a href="{{ url_for('backlog') }}" class="btn-back">
+              <i class="fas fa-arrow-left"></i>
+              Back to Search
+            </a>
+            <button class="btn-back btn-download" onclick="printResults()">
+              <i class="fas fa-download"></i>
+              Download PDF
+            </button>
+          </div>
+
+        {% else %}
+          <!-- No Results State -->
+          <div class="text-center" data-aos="fade-in">
+            <div style="font-size: 4rem; color: var(--text-muted); margin: 40px 0;">
+              <i class="fas fa-search"></i>
+            </div>
+            <h3 style="color: var(--text-muted); margin-bottom: 20px;">No Results Found</h3>
+            <p style="color: var(--text-muted); margin-bottom: 40px;">
+              We couldn't find any backlog details. Please try searching again with different criteria.
+            </p>
+            <a href="{{ url_for('backlog') }}" class="btn-back">
+              <i class="fas fa-search"></i>
+              Search Again
+            </a>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <!-- Scroll to Top Button -->
+  <div class="scroll-to-top" id="scrollToTop">
+    <i class="fas fa-chevron-up"></i>
+  </div>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <!-- AOS Animation -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+  
+  <script>
+    // Grade explanations
+    const gradeExplanations = {
+      'S': 'Outstanding (90-100%)',
+      'A': 'Excellent (80-89%)', 
+      'B': 'Very Good (70-79%)',
+      'C': 'Good (60-69%)',
+      'D': 'Satisfactory (50-59%)',
+      'F': 'Fail (Below 50%)',
+      'P': 'Pass'
+    };
+
+    // Initialize AOS
+    AOS.init({ 
+      duration: 600, 
+      once: true,
+      offset: 50
+    });
+
+    // Loading overlay
+    window.addEventListener('load', function() {
+      setTimeout(() => {
+        document.getElementById('loadingOverlay').style.opacity = '0';
+        setTimeout(() => {
+          document.getElementById('loadingOverlay').style.display = 'none';
+        }, 500);
+      }, 800);
+    });
+
+    // Progress bar
+    window.addEventListener('scroll', () => {
+      const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+      const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      const scrolled = (winScroll / height) * 100;
+      document.getElementById('progressBar').style.width = scrolled + '%';
+    });
+
+    // Navbar scroll effect
+    $(window).scroll(function() {
+      if ($(window).scrollTop() > 100) {
+        $('#mainNavbar').addClass('scrolled');
+        $('#scrollToTop').addClass('show');
+      } else {
+        $('#mainNavbar').removeClass('scrolled');
+        $('#scrollToTop').removeClass('show');
+      }
+    });
+
+    // Scroll to top
+    $('#scrollToTop').click(function() {
+      $('html, body').animate({scrollTop: 0}, 800);
+    });
+
+    // Enhanced table interactions
+    $('.modern-table tbody tr').hover(
+      function() {
+        $(this).addClass('table-row-hover');
+      },
+      function() {
+        $(this).removeClass('table-row-hover');
+      }
+    );
+
+    // Table search functionality
+    $('#tableSearch').on('keyup', function() {
+      const searchTerm = $(this).val().toLowerCase();
+      $('.modern-table tbody tr').each(function() {
+        const rowText = $(this).text().toLowerCase();
+        if (rowText.indexOf(searchTerm) > -1) {
+          $(this).show();
+        } else {
+          $(this).hide();
+        }
+      });
+
+      // Update visible count
+      const visibleRows = $('.modern-table tbody tr:visible').length;
+      const totalRows = $('.modern-table tbody tr').length;
+      
+      if (searchTerm !== '') {
+        if (!$('#searchResults').length) {
+          $('.table-search').append(`
+            <div id="searchResults" style="margin-top: 10px; color: var(--text-muted); font-size: 0.9rem;">
+              Showing <span id="visibleCount">${visibleRows}</span> of <span id="totalCount">${totalRows}</span> results
+            </div>
+          `);
+        } else {
+          $('#visibleCount').text(visibleRows);
+        }
+      } else {
+        $('#searchResults').remove();
+      }
+    });
+
+    // Smooth scrolling for navigation links
+    $('a[href^="#"]').on('click', function(event) {
+      const target = $(this.getAttribute('href'));
+      if (target.length) {
+        event.preventDefault();
+        $('html, body').stop().animate({
+          scrollTop: target.offset().top - 100
+        }, 1000);
+      }
+    });
+
+    // Enhanced print functionality
+    function printResults() {
+      // Hide search before printing
+      const searchDiv = document.querySelector('.table-search');
+      const debugDiv = document.querySelector('.debug-section');
+      
+      if (searchDiv) searchDiv.style.display = 'none';
+      if (debugDiv) debugDiv.style.display = 'none';
+      
+      // Show all rows for printing
+      $('.modern-table tbody tr').show();
+      
+      // Add print title
+      const originalTitle = document.title;
+      document.title = 'CUTM Backlog Report - ' + new Date().toLocaleDateString();
+      
+      window.print();
+      
+      // Restore after printing
+      setTimeout(() => {
+        if (searchDiv) searchDiv.style.display = 'block';
+        document.title = originalTitle;
+      }, 1000);
+    }
+
+    // Debug toggle function
+    function toggleDebug() {
+      const debugInfo = document.getElementById('debugInfo');
+      if (debugInfo) {
+        debugInfo.style.display = debugInfo.style.display === 'none' ? 'block' : 'none';
+      }
+    }
+
+    // Handle empty cells and N/A values
+    $(document).ready(function() {
+      $('.modern-table td').each(function() {
+        const text = $(this).text().trim();
+        if (text === '' || text === 'None' || text === 'null') {
+          $(this).html('<span class="na-text">N/A</span>');
+        }
+      });
+
+      // Initialize tooltips for grades
+      $('.grade-cell').each(function() {
+        const grade = $(this).text().trim();
+        if (gradeExplanations[grade]) {
+          $(this).attr('title', gradeExplanations[grade]);
+          $(this).attr('data-toggle', 'tooltip');
+        }
+      });
+
+      // Initialize Bootstrap tooltips
+      $('[data-toggle="tooltip"]').tooltip({
+        placement: 'top',
+        trigger: 'hover'
+      });
+    });
+
+    // Add keyboard navigation for table
+    let currentRow = -1;
+    $(document).keydown(function(e) {
+      const visibleRows = $('.modern-table tbody tr:visible');
+      
+      if (e.keyCode === 40) { // Down arrow
+        e.preventDefault();
+        currentRow = Math.min(currentRow + 1, visibleRows.length - 1);
+        highlightRow();
+      } else if (e.keyCode === 38) { // Up arrow
+        e.preventDefault();
+        currentRow = Math.max(currentRow - 1, 0);
+        highlightRow();
+      }
+    });
+
+    function highlightRow() {
+      $('.modern-table tbody tr').removeClass('table-row-highlight');
+      const visibleRows = $('.modern-table tbody tr:visible');
+      if (currentRow >= 0 && currentRow < visibleRows.length) {
+        $(visibleRows[currentRow]).addClass('table-row-highlight');
+        $(visibleRows[currentRow])[0].scrollIntoView({
+          behavior: 'smooth',
+          block: 'nearest'
+        });
+      }
+    }
+
+    // Performance optimization
+    let ticking = false;
+    function requestTick() {
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          ticking = false;
+        });
+        ticking = true;
+      }
+    }
+
+    // Intersection Observer for better animation performance
+    const observerOptions = {
+      threshold: 0.1,
+      rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('in-view');
+        }
+      });
+    }, observerOptions);
+
+    // Observe animated elements
+    document.querySelectorAll('[data-aos]').forEach(el => {
+      observer.observe(el);
+    });
+
+    // Auto-focus search if table has many rows
+    $(document).ready(function() {
+      if ($('.modern-table tbody tr').length > 10) {
+        setTimeout(() => {
+          $('#tableSearch').focus();
+        }, 2000);
+      }
+    });
+
+    // Add search suggestions
+    $('#tableSearch').on('focus', function() {
+      if (!$('#searchSuggestions').length) {
+        const suggestions = ['Grade: A', 'Grade: B', 'Grade: F', 'Semester', 'Credits'];
+        const suggestionsHtml = suggestions.map(s => 
+          `<span class="badge badge-outline-primary mr-2 mb-2" style="cursor: pointer; opacity: 0.7;" onclick="$('#tableSearch').val('${s.split(': ')[1] || s}').trigger('keyup')">${s}</span>`
+        ).join('');
+        
+        $('.table-search').append(`
+          <div id="searchSuggestions" style="margin-top: 10px;">
+            <small style="color: var(--text-muted);">Quick filters:</small><br>
+            ${suggestionsHtml}
+          </div>
+        `);
+      }
+    });
+
+    // Hide suggestions when clicking outside
+    $(document).on('click', function(e) {
+      if (!$(e.target).closest('.table-search').length) {
+        $('#searchSuggestions').fadeOut();
+      }
+    });
+
+    console.log('CUTM Backlog Details Portal - Loaded Successfully');
+  </script>
+</body>
+</html>

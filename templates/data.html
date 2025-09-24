@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CBCS - CUTM</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0;
+            padding: 20px;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            padding: 50px;
+            text-align: center;
+            max-width: 500px;
+            width: 100%;
+        }
+        
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+        }
+        
+        .description {
+            color: #6c757d;
+            margin-bottom: 40px;
+            font-size: 1.1em;
+            line-height: 1.6;
+        }
+        
+        .buttons-container {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .redirect-btn {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            padding: 20px 30px;
+            text-decoration: none;
+            border-radius: 15px;
+            font-size: 1.1em;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            min-width: 180px;
+            justify-content: center;
+        }
+        
+        .redirect-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn-basket {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+        }
+        
+        .btn-track {
+            background: linear-gradient(45deg, #56ab2f, #a8e6cf);
+        }
+        
+        .btn-track:hover {
+            box-shadow: 0 10px 25px rgba(86, 171, 47, 0.4);
+        }
+        
+        .back-link {
+            margin-top: 30px;
+            color: #6c757d;
+            text-decoration: none;
+        }
+        
+        .back-link:hover {
+            color: #495057;
+        }
+        
+        @media (max-width: 768px) {
+            .buttons-container {
+                flex-direction: column;
+            }
+            
+            .redirect-btn {
+                min-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📚 CBCS Management</h1>
+        <p class="description">
+            Choose what you want to do with CBCS subjects
+        </p>
+        
+        <!-- Method 1: Simple HTML Links -->
+        <div class="buttons-container">
+            <a href="basket" class="redirect-btn btn-basket">
+                🗂️ View Baskets
+            </a>
+            
+            <a href="/baskettrack" class="redirect-btn btn-track">
+                📊 Track Progress
+            </a>
+        </div>
+        
+        <div class="back-link">
+            <a href="/">← Back to Home</a>
+        </div>
+    </div>
+</body>
+</html>

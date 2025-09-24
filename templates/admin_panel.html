@@ -1,0 +1,1484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard | CUTM Result Portal</title>
+                 
+    <!-- jQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <!-- Bootstrap CSS -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- AOS Animation -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary-color: #0f172a;
+            --secondary-color: #1e293b;
+            --accent-color: #3b82f6;
+            --accent-hover: #2563eb;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --danger-color: #ef4444;
+            --info-color: #06b6d4;
+            --purple-color: #8b5cf6;
+            --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --gradient-secondary: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+            --gradient-accent: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+            --text-light: #ffffff;
+            --text-muted: #94a3b8;
+            --text-dark: #1e293b;
+            --glass-bg: rgba(255, 255, 255, 0.08);
+            --glass-border: rgba(255, 255, 255, 0.15);
+            --shadow-light: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --shadow-medium: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            --shadow-heavy: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--gradient-secondary);
+            color: var(--text-light);
+            overflow-x: hidden;
+            line-height: 1.6;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        /* Enhanced animated background with admin theme */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(59, 130, 246, 0.12) 0%, transparent 50%),
+                radial-gradient(circle at 80% 30%, rgba(16, 185, 129, 0.10) 0%, transparent 50%),
+                radial-gradient(circle at 40% 70%, rgba(245, 158, 11, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 60% 80%, rgba(139, 92, 246, 0.10) 0%, transparent 50%),
+                radial-gradient(circle at 90% 10%, rgba(236, 72, 153, 0.06) 0%, transparent 50%);
+            z-index: -2;
+            animation: adminGlow 25s ease-in-out infinite;
+        }
+
+        @keyframes adminGlow {
+            0%, 100% { opacity: 0.6; transform: scale(1) rotate(0deg); }
+            25% { opacity: 0.4; transform: scale(1.02) rotate(1deg); }
+            50% { opacity: 0.7; transform: scale(0.98) rotate(-0.5deg); }
+            75% { opacity: 0.5; transform: scale(1.01) rotate(0.5deg); }
+        }
+
+        /* Admin-themed floating elements */
+        .admin-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .admin-element {
+            position: absolute;
+            opacity: 0.04;
+            animation: adminFloat 20s ease-in-out infinite;
+            color: var(--accent-color);
+            filter: blur(0.5px);
+        }
+
+        .admin-element:nth-child(1) {
+            top: 10%;
+            left: 5%;
+            font-size: 2.8rem;
+            animation-delay: -5s;
+            color: var(--accent-color);
+        }
+
+        .admin-element:nth-child(2) {
+            top: 20%;
+            right: 10%;
+            font-size: 2.2rem;
+            animation-delay: -12s;
+            color: var(--success-color);
+        }
+
+        .admin-element:nth-child(3) {
+            bottom: 25%;
+            left: 15%;
+            font-size: 2.6rem;
+            animation-delay: -8s;
+            color: var(--warning-color);
+        }
+
+        .admin-element:nth-child(4) {
+            bottom: 15%;
+            right: 20%;
+            font-size: 2rem;
+            animation-delay: -20s;
+            color: var(--purple-color);
+        }
+
+        .admin-element:nth-child(5) {
+            top: 50%;
+            left: 80%;
+            font-size: 2.4rem;
+            animation-delay: -15s;
+            color: var(--info-color);
+        }
+
+        @keyframes adminFloat {
+            0%, 100% { transform: translateY(0) rotate(0deg) scale(1); opacity: 0.04; }
+            25% { transform: translateY(-25px) rotate(90deg) scale(1.1); opacity: 0.06; }
+            50% { transform: translateY(-12px) rotate(180deg) scale(0.9); opacity: 0.03; }
+            75% { transform: translateY(-35px) rotate(270deg) scale(1.05); opacity: 0.05; }
+        }
+
+        /* Enhanced navbar with admin branding */
+        .navbar {
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(25px);
+            border-bottom: 1px solid var(--glass-border);
+            padding: 18px 0;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar.scrolled {
+            background: rgba(15, 23, 42, 0.98);
+            padding: 12px 0;
+            box-shadow: var(--shadow-medium);
+        }
+
+        .navbar-brand {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: var(--text-light) !important;
+            display: flex;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .navbar-brand:hover {
+            transform: scale(1.05);
+            color: var(--accent-color) !important;
+        }
+
+        .navbar-brand img {
+            margin-right: 12px;
+            border-radius: 10px;
+            box-shadow: var(--shadow-light);
+            transition: all 0.3s ease;
+        }
+
+        .navbar-brand:hover img {
+            box-shadow: var(--shadow-medium);
+            transform: rotate(5deg);
+        }
+
+        .navbar .nav-link {
+            color: var(--text-muted) !important;
+            font-weight: 500;
+            margin: 0 6px;
+            padding: 10px 18px !important;
+            border-radius: 25px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            font-size: 0.9rem;
+        }
+
+        .navbar .nav-link::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.2), transparent);
+            transition: left 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .navbar .nav-link:hover::before {
+            left: 100%;
+        }
+
+        .navbar .nav-link:hover {
+            color: var(--text-light) !important;
+            background: rgba(59, 130, 246, 0.15);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-light);
+        }
+
+        .navbar .nav-link.active {
+            color: var(--accent-color) !important;
+            background: rgba(59, 130, 246, 0.1);
+        }
+
+        /* Admin logout button */
+        .logout-btn {
+            background: linear-gradient(135deg, var(--danger-color), #dc2626);
+            border: none;
+            color: white !important;
+            font-weight: 600;
+            font-size: 0.85rem;
+            border-radius: 25px;
+            padding: 8px 16px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .logout-btn:hover {
+            background: linear-gradient(135deg, #dc2626, #b91c1c);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-medium);
+            color: white !important;
+            text-decoration: none;
+        }
+
+        /* Main container with sidebar layout */
+        .main-container {
+            padding-top: 85px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Welcome header section */
+        .welcome-section {
+            padding: 50px 0;
+            text-align: center;
+            position: relative;
+        }
+
+        .admin-avatar {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, var(--accent-color), var(--accent-hover));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 25px;
+            font-size: 2.5rem;
+            color: white;
+            animation: adminPulse 3s ease-in-out infinite;
+            box-shadow: 0 0 30px rgba(59, 130, 246, 0.4);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .admin-avatar::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: conic-gradient(from 0deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            border-radius: 50%;
+            animation: avatarSpin 4s linear infinite;
+        }
+
+        @keyframes adminPulse {
+            0%, 100% { 
+                transform: scale(1); 
+                box-shadow: 0 0 30px rgba(59, 130, 246, 0.4); 
+            }
+            50% { 
+                transform: scale(1.05); 
+                box-shadow: 0 0 40px rgba(59, 130, 246, 0.6); 
+            }
+        }
+
+        @keyframes avatarSpin {
+            to { transform: rotate(360deg); }
+        }
+
+        .welcome-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: clamp(2.2rem, 4vw, 3.5rem);
+            font-weight: 800;
+            margin-bottom: 18px;
+            background: linear-gradient(135deg, #ffffff, var(--accent-color), var(--success-color));
+            -webkit-background-clip: text;
+            background-clip: text;
+            background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1.2;
+            animation: titleGlow 3s ease-in-out infinite alternate;
+        }
+
+        @keyframes titleGlow {
+            0% { filter: brightness(1); }
+            100% { filter: brightness(1.2); }
+        }
+
+        .welcome-subtitle {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            margin-bottom: 12px;
+            max-width: 550px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .admin-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(16, 185, 129, 0.15);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            border-radius: 25px;
+            padding: 6px 16px;
+            font-size: 0.8rem;
+            color: var(--success-color);
+            font-weight: 600;
+            margin-bottom: 35px;
+            backdrop-filter: blur(10px);
+        }
+
+        /* Dashboard stats section */
+        .stats-section {
+            padding: 50px 0;
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(15px);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 25px;
+            margin-bottom: 50px;
+        }
+
+        .stat-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(25px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 25px;
+            text-align: center;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: var(--accent-color);
+            transform: scaleX(0);
+            transition: transform 0.5s ease;
+        }
+
+        .stat-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-heavy);
+            border-color: rgba(59, 130, 246, 0.3);
+        }
+
+        .stat-icon {
+            font-size: 2.5rem;
+            margin-bottom: 18px;
+            transition: all 0.3s ease;
+            display: inline-block;
+        }
+
+        .stat-card:hover .stat-icon {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        .stat-number {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: var(--text-light);
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .stat-label {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .stat-trend {
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .trend-up { color: var(--success-color); }
+        .trend-down { color: var(--danger-color); }
+
+        /* Admin modules grid */
+        .modules-section {
+            padding: 50px 0;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .section-title h2 {
+            font-family: 'Poppins', sans-serif;
+            font-size: clamp(1.8rem, 3.5vw, 2.5rem);
+            font-weight: 700;
+            margin-bottom: 16px;
+            background: linear-gradient(135deg, var(--text-light), var(--accent-color));
+            /* -webkit-background-clip: text; */
+            -webkit-text-fill-color: transparent;
+        }
+
+        .section-title p {
+            color: var(--text-muted);
+            font-size: 1rem;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .modules-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 30px;
+        }
+
+        .module-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(30px);
+            border: 1px solid var(--glass-border);
+            border-radius: 25px;
+            padding: 30px 25px;
+            text-align: center;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .module-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(59, 130, 246, 0.08) 0%, transparent 70%);
+            transform: scale(0);
+            transition: transform 0.6s ease;
+        }
+
+        .module-card:hover::before {
+            transform: scale(1);
+        }
+
+        .module-card:hover {
+            transform: translateY(-12px);
+            box-shadow: var(--shadow-heavy);
+            border-color: rgba(59, 130, 246, 0.3);
+        }
+
+        .module-icon {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 2rem;
+            color: white;
+            transition: all 0.4s ease;
+            position: relative;
+            z-index: 2;
+        }
+
+        .module-card:hover .module-icon {
+            transform: scale(1.1) rotate(10deg);
+        }
+
+        .upload-icon { background: linear-gradient(135deg, var(--accent-color), var(--accent-hover)); }
+        .view-icon { background: linear-gradient(135deg, var(--success-color), #059669); }
+        .backlog-icon { background: linear-gradient(135deg, var(--warning-color), #d97706); }
+        .analytics-icon { background: linear-gradient(135deg, var(--info-color), #0891b2); }
+        .settings-icon { background: linear-gradient(135deg, #8b5cf6, #7c3aed); }
+        .security-icon { background: linear-gradient(135deg, #ef4444, #dc2626); }
+
+        .module-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--text-light);
+            margin-bottom: 12px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .module-description {
+            color: var(--text-muted);
+            line-height: 1.6;
+            margin-bottom: 25px;
+            flex-grow: 1;
+            position: relative;
+            z-index: 2;
+            font-size: 0.9rem;
+        }
+
+        .module-features {
+            list-style: none;
+            margin-bottom: 25px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .module-features li {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 6px;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .module-features li i {
+            color: var(--success-color);
+            width: 14px;
+        }
+
+        .module-btn {
+            background: linear-gradient(135deg, var(--accent-color), var(--accent-hover));
+            border: none;
+            color: white !important;
+            font-weight: 700;
+            font-size: 0.9rem;
+            border-radius: 25px;
+            padding: 12px 24px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            z-index: 2;
+        }
+
+        .module-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.6s;
+        }
+
+        .module-btn:hover::before {
+            left: 100%;
+        }
+
+        .module-btn:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: var(--shadow-heavy);
+            background: linear-gradient(135deg, var(--accent-hover), #1d4ed8);
+            color: white !important;
+            text-decoration: none;
+        }
+
+        .success-btn {
+            background: linear-gradient(135deg, var(--success-color), #059669);
+        }
+
+        .success-btn:hover {
+            background: linear-gradient(135deg, #059669, #047857);
+        }
+
+        .warning-btn {
+            background: linear-gradient(135deg, var(--warning-color), #d97706);
+        }
+
+        .warning-btn:hover {
+            background: linear-gradient(135deg, #d97706, #b45309);
+        }
+
+        .info-btn {
+            background: linear-gradient(135deg, var(--info-color), #0891b2);
+        }
+
+        .info-btn:hover {
+            background: linear-gradient(135deg, #0891b2, #0e7490);
+        }
+
+        .purple-btn {
+            background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+        }
+
+        .purple-btn:hover {
+            background: linear-gradient(135deg, #7c3aed, #6d28d9);
+        }
+
+        .danger-btn {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+        }
+
+        .danger-btn:hover {
+            background: linear-gradient(135deg, #dc2626, #b91c1c);
+        }
+
+        /* Quick actions section */
+        .quick-actions {
+            background: rgba(255, 255, 255, 0.02);
+            padding: 50px 0;
+            margin-top: 30px;
+        }
+
+        .actions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 18px;
+        }
+
+        .quick-action {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 18px;
+            padding: 20px 16px;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .quick-action:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-medium);
+            background: rgba(255, 255, 255, 0.12);
+        }
+
+        .quick-action i {
+            font-size: 1.8rem;
+            margin-bottom: 12px;
+            color: var(--accent-color);
+        }
+
+        .quick-action h4 {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-light);
+            margin-bottom: 6px;
+        }
+
+        .quick-action p {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin: 0;
+        }
+
+        /* Progress Bar */
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent-color), var(--success-color));
+            z-index: 9999;
+            transition: width 0.25s ease;
+        }
+
+        /* Loading overlay */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--gradient-secondary);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease;
+        }
+
+        .loader {
+            width: 60px;
+            height: 60px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-top: 3px solid var(--accent-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 16px;
+        }
+
+        .loading-text {
+            color: var(--text-light);
+            font-size: 1rem;
+            font-weight: 600;
+            animation: pulse-text 2s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes pulse-text {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
+        }
+
+        /* Enhanced footer */
+        .admin-footer {
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.95), rgba(30, 41, 59, 0.95));
+            backdrop-filter: blur(25px);
+            border-top: 1px solid var(--glass-border);
+            padding: 35px 0;
+            text-align: center;
+            margin-top: 50px;
+        }
+
+        .footer-content {
+            color: var(--text-muted);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 25px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .footer-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.85rem;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--accent-color);
+        }
+
+        /* Scroll to top button */
+        .scroll-to-top {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--accent-color), var(--accent-hover));
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            box-shadow: var(--shadow-medium);
+        }
+
+        .scroll-to-top.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .scroll-to-top:hover {
+            transform: scale(1.1) translateY(-2px);
+            box-shadow: var(--shadow-heavy);
+        }
+
+        .scroll-to-top i {
+            color: white;
+            font-size: 1.1rem;
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .main-container {
+                padding-top: 70px;
+            }
+
+            .welcome-section {
+                padding: 35px 0;
+            }
+
+            .admin-avatar {
+                width: 75px;
+                height: 75px;
+                font-size: 2rem;
+            }
+
+            .welcome-title {
+                font-size: 2.2rem;
+            }
+
+            .modules-grid {
+                grid-template-columns: 1fr;
+                gap: 25px;
+            }
+
+            .module-card {
+                padding: 25px 20px;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+                gap: 18px;
+            }
+
+            .actions-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 12px;
+            }
+
+            .navbar {
+                padding: 12px 0;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .welcome-section {
+                padding: 25px 12px;
+            }
+
+            .module-card {
+                margin: 0 8px;
+                padding: 20px 15px;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+
+            .actions-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-links {
+                flex-direction: column;
+                gap: 12px;
+            }
+        }
+
+        /* Animation delays for staggered effect */
+        .module-card:nth-child(1) { animation-delay: 0.1s; }
+        .module-card:nth-child(2) { animation-delay: 0.2s; }
+        .module-card:nth-child(3) { animation-delay: 0.3s; }
+        .module-card:nth-child(4) { animation-delay: 0.4s; }
+        .module-card:nth-child(5) { animation-delay: 0.5s; }
+        .module-card:nth-child(6) { animation-delay: 0.6s; }
+    </style>
+</head>
+<body>
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loader"></div>
+        <div class="loading-text">Loading Admin Dashboard...</div>
+    </div>
+
+    <!-- Progress Bar -->
+    <div class="progress-bar" id="progressBar"></div>
+
+    <!-- Admin Background Elements -->
+    <div class="admin-bg">
+        <div class="admin-element">
+            <i class="fas fa-cogs"></i>
+        </div>
+        <div class="admin-element">
+            <i class="fas fa-chart-line"></i>
+        </div>
+        <div class="admin-element">
+            <i class="fas fa-database"></i>
+        </div>
+        <div class="admin-element">
+            <i class="fas fa-users-cog"></i>
+        </div>
+        <div class="admin-element">
+            <i class="fas fa-shield-alt"></i>
+        </div>
+    </div>
+
+    <!-- Enhanced Navbar -->
+    <header>
+        <nav class="navbar navbar-expand-lg" id="mainNavbar">
+            <div class="container">
+                <a class="navbar-brand" href="{{ url_for('home') }}">
+                    <img src="https://gajajyoti.cutm.ac.in/img/images-removebg-preview.png" alt="CUTM Logo" height="40"> 
+                    CUTM Admin
+                </a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav">
+                    <span><i class="fas fa-bars text-white"></i></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav ml-auto align-items-center">
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('home') }}">
+                                <i class="fas fa-home"></i> Portal
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" href="#">
+                                <i class="fas fa-tachometer-alt"></i> Dashboard
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('about') }}">
+                                <i class="fas fa-info-circle"></i> About
+                            </a>
+                        </li>
+                        <li class="nav-item ml-2">
+                            <a href="{{ url_for('admin_logout') if 'admin_logout' in url_for.__globals__ else '#' }}" class="logout-btn">
+                                <i class="fas fa-sign-out-alt"></i>
+                                Logout
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Container -->
+    <div class="main-container">
+        <!-- Welcome Section -->
+        <section class="welcome-section" data-aos="fade-up">
+            <div class="container">
+                <div class="admin-avatar">
+                    <i class="fas fa-user-shield"></i>
+                </div>
+                <h1 class="welcome-title">Admin Dashboard</h1>
+                <p class="welcome-subtitle">
+                    Complete management console for CUTM Result Portal
+                </p>
+                <div class="admin-badge">
+                    <i class="fas fa-shield-check"></i>
+                    <span>Administrator Access Granted</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Dashboard Stats -->
+        <section class="stats-section">
+            <div class="container">
+                <div class="stats-grid">
+                    <div class="stat-card" data-aos="fade-up" data-aos-delay="100">
+                        <div class="stat-icon" style="color: var(--accent-color);">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="stat-number" data-count="2847">0</div>
+                        <div class="stat-label">Total Students</div>
+                        <div class="stat-trend trend-up">
+                            <i class="fas fa-arrow-up"></i>
+                            <span>12.5% increase</span>
+                        </div>
+                    </div>
+
+                    <div class="stat-card" data-aos="fade-up" data-aos-delay="200">
+                        <div class="stat-icon" style="color: var(--success-color);">
+                            <i class="fas fa-file-alt"></i>
+                        </div>
+                        <div class="stat-number" data-count="156">0</div>
+                        <div class="stat-label">Active Records</div>
+                        <div class="stat-trend trend-up">
+                            <i class="fas fa-arrow-up"></i>
+                            <span>8.3% increase</span>
+                        </div>
+                    </div>
+
+                    <div class="stat-card" data-aos="fade-up" data-aos-delay="300">
+                        <div class="stat-icon" style="color: var(--warning-color);">
+                            <i class="fas fa-exclamation-triangle"></i>
+                        </div>
+                        <div class="stat-number" data-count="23">0</div>
+                        <div class="stat-label">Pending Backlogs</div>
+                        <div class="stat-trend trend-down">
+                            <i class="fas fa-arrow-down"></i>
+                            <span>5.2% decrease</span>
+                        </div>
+                    </div>
+
+                    <div class="stat-card" data-aos="fade-up" data-aos-delay="400">
+                        <div class="stat-icon" style="color: var(--info-color);">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <div class="stat-number" data-count="98">0</div>
+                        <div class="stat-label">System Health</div>
+                        <div class="stat-trend trend-up">
+                            <i class="fas fa-arrow-up"></i>
+                            <span>Excellent</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Admin Modules -->
+        <section class="modules-section">
+            <div class="container">
+                <div class="section-title" data-aos="fade-up">
+                    <h2>Administrative Modules</h2>
+                    <p>Comprehensive tools for managing the CUTM Result Portal system</p>
+                </div>
+
+                <div class="modules-grid">
+                    <!-- Data Upload Module -->
+                    <div class="module-card" data-aos="zoom-in" data-aos-delay="100">
+                        <div class="module-icon upload-icon">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                        </div>
+                        <h3 class="module-title">Data Upload Center</h3>
+                        <p class="module-description">
+                            Upload and manage student data through Excel/CSV files with advanced validation and batch processing capabilities.
+                        </p>
+                        <ul class="module-features">
+                            <li><i class="fas fa-check"></i> Excel & CSV support</li>
+                            <li><i class="fas fa-check"></i> Data validation</li>
+                            <li><i class="fas fa-check"></i> Batch processing</li>
+                            <li><i class="fas fa-check"></i> Error reporting</li>
+                        </ul>
+                        <a href="/update_data" class="module-btn">
+                            <i class="fas fa-upload"></i>
+                            Upload Files
+                        </a>
+                    </div>
+
+                    <!-- Data Management Module -->
+                    <div class="module-card" data-aos="zoom-in" data-aos-delay="200">
+                        <div class="module-icon view-icon">
+                            <i class="fas fa-table"></i>
+                        </div>
+                        <h3 class="module-title">Data Management</h3>
+                        <p class="module-description">
+                            View, edit, and manage all student records with advanced filtering, search, and bulk operations.
+                        </p>
+                        <ul class="module-features">
+                            <li><i class="fas fa-check"></i> Real-time editing</li>
+                            <li><i class="fas fa-check"></i> Advanced search</li>
+                            <li><i class="fas fa-check"></i> Bulk operations</li>
+                            <li><i class="fas fa-check"></i> Export options</li>
+                        </ul>
+                        <a href="/view_data" class="module-btn success-btn">
+                            <i class="fas fa-eye"></i>
+                            Manage Data
+                        </a>
+                    </div>
+
+                    <!-- Backlog Management Module -->
+                    <div class="module-card" data-aos="zoom-in" data-aos-delay="300">
+                        <div class="module-icon backlog-icon">
+                            <i class="fas fa-history"></i>
+                        </div>
+                        <h3 class="module-title">Backlog Management</h3>
+                        <p class="module-description">
+                            Monitor and manage student backlogs with comprehensive tracking, reporting, and resolution tools.
+                        </p>
+                        <ul class="module-features">
+                            <li><i class="fas fa-check"></i> Backlog tracking</li>
+                            <li><i class="fas fa-check"></i> Student notifications</li>
+                            <li><i class="fas fa-check"></i> Progress monitoring</li>
+                            <li><i class="fas fa-check"></i> Report generation</li>
+                        </ul>
+                        <a href="/backlog" class="module-btn warning-btn">
+                            <i class="fas fa-list-alt"></i>
+                            View Backlogs
+                        </a>
+                    </div>
+
+                    <!-- Branch Management Module -->
+                    <div class="module-card" data-aos="zoom-in" data-aos-delay="400">
+                        <div class="module-icon analytics-icon">
+                            <i class="fas fa-code-branch"></i>
+                        </div>
+                        <h3 class="module-title">Branch Management</h3>
+                        <p class="module-description">
+                            Track, analyze, and improve branch data management with powerful monitoring and reporting features.
+                        </p>
+                        <ul class="module-features">
+                            <li><i class="fas fa-check"></i> Data tracking</li>
+                            <li><i class="fas fa-check"></i> Automated alerts</li>
+                            <li><i class="fas fa-check"></i> Performance monitoring</li>
+                            <li><i class="fas fa-check"></i> Report generation</li>
+                        </ul>
+                        <a href="/batch" class="module-btn info-btn">
+                            <i class="fas fa-sitemap"></i>
+                            Branch Data
+                        </a>
+                    </div>
+
+                    <!-- CBCS Management Module -->
+                    <div class="module-card" data-aos="zoom-in" data-aos-delay="500">
+                        <div class="module-icon settings-icon">
+                            <i class="fas fa-database"></i>
+                        </div>
+                        <h3 class="module-title">CBCS Data</h3>
+                        <p class="module-description">
+                            Comprehensive CBCS data management with advanced filtering, search, and bulk operations for academic records.
+                        </p>
+                        <ul class="module-features">
+                            <li><i class="fas fa-check"></i> Real-time editing</li>
+                            <li><i class="fas fa-check"></i> Advanced search</li>
+                            <li><i class="fas fa-check"></i> Bulk operations</li>
+                            <li><i class="fas fa-check"></i> Export options</li>
+                        </ul>
+                        <a href="/data" class="module-btn purple-btn">
+                            <i class="fas fa-database"></i>
+                            Manage CBCS
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Quick Actions -->
+        <section class="quick-actions">
+            <div class="container">
+                <div class="section-title" data-aos="fade-up">
+                    <h2>Quick Actions</h2>
+                    <p>Frequently used administrative tasks</p>
+                </div>
+
+                <div class="actions-grid">
+                    <div class="quick-action" data-aos="fade-up" data-aos-delay="100">
+                        <i class="fas fa-plus-circle"></i>
+                        <h4>Add Student</h4>
+                        <p>Quick student registration</p>
+                    </div>
+
+                    <div class="quick-action" data-aos="fade-up" data-aos-delay="200">
+                        <i class="fas fa-search"></i>
+                        <h4>Search Records</h4>
+                        <p>Find student data</p>
+                    </div>
+
+                    <div class="quick-action" data-aos="fade-up" data-aos-delay="300">
+                        <i class="fas fa-download"></i>
+                        <h4>Export Data</h4>
+                        <p>Download reports</p>
+                    </div>
+
+                    <div class="quick-action" data-aos="fade-up" data-aos-delay="400">
+                        <i class="fas fa-bell"></i>
+                        <h4>Notifications</h4>
+                        <p>System alerts</p>
+                    </div>
+
+                    <div class="quick-action" data-aos="fade-up" data-aos-delay="500">
+                        <i class="fas fa-chart-pie"></i>
+                        <h4>Analytics</h4>
+                        <p>Performance insights</p>
+                    </div>
+
+                    <div class="quick-action" data-aos="fade-up" data-aos-delay="600">
+                        <i class="fas fa-cog"></i>
+                        <h4>Settings</h4>
+                        <p>System configuration</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+         <!-- Enhanced Footer
+    <footer class="admin-footer">
+        <div class="container">
+            <div class="footer-content" data-aos="fade-up">
+                <div class="footer-links">
+                    <a href="{{ url_for('home') }}">Portal Home</a>
+                    <a href="{{ url_for('about') }}">About</a>
+                    <a href="#">Help Center</a>
+                    <a href="#">Documentation</a>
+                    <a href="#">Privacy Policy</a>
+                </div>
+                <p>&copy; 2025 CUTM Result Portal - Admin Dashboard. All rights reserved.</p>
+            </div>
+        </div>
+    </footer> --> 
+     <!-- Enhanced Footer -->
+ <footer id="footer">
+  <div class="container">
+    <div class="footer-content">
+      <h3>CUTM Result Portal</h3>
+      <p style="margin-bottom: 1.2rem; opacity: 0.9;">
+        Empowering students with transparent, secure, and instant access to their academic achievements through innovative technology.
+      </p>
+
+      <div class="social-links">
+        <a href="https://github.com/sajjad1105" aria-label="GitHub">
+          <i class="fab fa-github"></i>
+        </a>
+        <a href="https://www.linkedin.com/in/md-sajjad-khan" aria-label="LinkedIn">
+          <i class="fab fa-linkedin-in"></i>
+        </a>
+        <a href="https://twitter.com/Hanxee_Sajjad05" aria-label="Twitter">
+          <i class="fab fa-twitter"></i>
+        </a>
+        <a href="https://www.facebook.com/profile.php?id=100008465775523" aria-label="Facebook">
+          <i class="fab fa-facebook-f"></i>
+        </a>
+        <a href="https://www.instagram.com/hanxee_sajjad_05" aria-label="Instagram">
+          <i class="fab fa-instagram"></i>
+        </a>
+      </div>
+
+      <div style="border-top: 1px solid rgba(255,255,255,0.2); padding-top: 1.2rem; margin-top: 1.6rem; opacity: 0.8;">
+        <p>&copy; 2025 CUTM Result Portal. Designed by MD SAJJAD KHAN. All rights reserved. Crafted with excellence for academic success.</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+    <!-- Scroll to Top Button -->
+    <div class="scroll-to-top" id="scrollToTop">
+        <i class="fas fa-chevron-up"></i>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <!-- AOS Animation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+    
+    <script>
+        // Initialize AOS
+        AOS.init({ 
+            duration: 700, 
+            once: true,
+            offset: 40
+        });
+
+        // Loading overlay
+        window.addEventListener('load', function() {
+            setTimeout(() => {
+                document.getElementById('loadingOverlay').style.opacity = '0';
+                setTimeout(() => {
+                    document.getElementById('loadingOverlay').style.display = 'none';
+                }, 500);
+            }, 1000);
+        });
+
+        // Progress bar
+        window.addEventListener('scroll', () => {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            document.getElementById('progressBar').style.width = scrolled + '%';
+        });
+
+        // Navbar scroll effect
+        $(window).scroll(function() {
+            if ($(window).scrollTop() > 80) {
+                $('#mainNavbar').addClass('scrolled');
+                $('#scrollToTop').addClass('show');
+            } else {
+                $('#mainNavbar').removeClass('scrolled');
+                $('#scrollToTop').removeClass('show');
+            }
+        });
+
+        // Scroll to top
+        $('#scrollToTop').click(function() {
+            $('html, body').animate({scrollTop: 0}, 700);
+        });
+
+        // Animated counter for stats
+        function animateCounter() {
+            $('.stat-number').each(function() {
+                const $this = $(this);
+                const countTo = parseInt($this.attr('data-count'));
+                
+                $({ countNum: 0 }).animate({
+                    countNum: countTo
+                }, {
+                    duration: 1800,
+                    easing: 'easeOutQuart',
+                    step: function() {
+                        $this.text(Math.floor(this.countNum));
+                    },
+                    complete: function() {
+                        $this.text(countTo);
+                    }
+                });
+            });
+        }
+
+        // Intersection Observer for stats animation
+        const observerOptions = {
+            threshold: 0.4,
+            rootMargin: '0px 0px -80px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting && !entry.target.classList.contains('animated')) {
+                    entry.target.classList.add('animated');
+                    animateCounter();
+                }
+            });
+        }, observerOptions);
+
+        // Observe stats section
+        const statsSection = document.querySelector('.stats-section');
+        if (statsSection) {
+            observer.observe(statsSection);
+        }
+
+        // Enhanced module card interactions
+        $('.module-card').hover(
+            function() {
+                $(this).find('.module-icon').css('transform', 'scale(1.1) rotate(10deg)');
+            },
+            function() {
+                $(this).find('.module-icon').css('transform', 'scale(1) rotate(0deg)');
+            }
+        );
+
+        // Quick actions interactions
+        $('.quick-action').click(function() {
+            $(this).css('transform', 'scale(0.95)');
+            setTimeout(() => {
+                $(this).css('transform', 'translateY(-5px)');
+            }, 100);
+        });
+
+        // Add logout confirmation
+        $('.logout-btn').click(function(e) {
+            if (!confirm('Are you sure you want to logout from the admin panel?')) {
+                e.preventDefault();
+            }
+        });
+
+        // Smooth scrolling for navigation links
+        $('a[href^="#"]').on('click', function(event) {
+            const target = $(this.getAttribute('href'));
+            if (target.length) {
+                event.preventDefault();
+                $('html, body').stop().animate({
+                    scrollTop: target.offset().top - 80
+                }, 900);
+            }
+        });
+
+        // Add parallax effect for admin background elements
+        $(window).scroll(function() {
+            const scrolled = $(window).scrollTop();
+            $('.admin-bg .admin-element').each(function(index) {
+                const speed = 0.15 + (index * 0.05);
+                $(this).css('transform', `translateY(${scrolled * speed}px) rotate(${scrolled * 0.1}deg)`);
+            });
+        });
+
+        // Add custom easing
+        $.easing.easeOutQuart = function(x, t, b, c, d) {
+            return -c * ((t = t / d - 1) * t * t * t - 1) + b;
+        };
+
+        // Session activity tracking
+        let sessionTimer;
+        function resetSessionTimer() {
+            clearTimeout(sessionTimer);
+            sessionTimer = setTimeout(() => {
+                if (confirm('Your session will expire soon due to inactivity. Continue?')) {
+                    resetSessionTimer();
+                } else {
+                    window.location.href = '/admin/logout';
+                }
+            }, 1800000); // 30 minutes
+        }
+
+        // Reset timer on any activity
+        $(document).on('mousedown keydown scroll', resetSessionTimer);
+        resetSessionTimer();
+
+        // Real-time system status simulation
+        function updateSystemStatus() {
+            const healthStat = $('.stat-number[data-count="98"]');
+            if (healthStat.length) {
+                const currentValue = parseInt(healthStat.text()) || 98;
+                const newValue = Math.max(95, Math.min(100, currentValue + Math.floor(Math.random() * 3) - 1));
+                healthStat.text(newValue);
+                
+                const trendElement = healthStat.closest('.stat-card').find('.stat-trend');
+                if (newValue >= 98) {
+                    trendElement.removeClass('trend-down').addClass('trend-up');
+                    trendElement.find('span').text('Excellent');
+                } else if (newValue < 96) {
+                    trendElement.removeClass('trend-up').addClass('trend-down');
+                    trendElement.find('span').text('Needs Attention');
+                }
+            }
+        }
+
+        // Update every 45 seconds
+        setInterval(updateSystemStatus, 45000);
+
+        // Keyboard shortcuts for admin
+        $(document).keydown(function(e) {
+            if (e.altKey && e.keyCode === 68) { // Alt + D for dashboard
+                e.preventDefault();
+                window.location.href = '#';
+            }
+            
+            if (e.altKey && e.keyCode === 85) { // Alt + U for upload
+                e.preventDefault();
+                window.location.href = '/update_data';
+            }
+            
+            if (e.altKey && e.keyCode === 86) { // Alt + V for view data
+                e.preventDefault();
+                window.location.href = '/view_data';
+            }
+        });
+
+        console.log('✅ CUTM Admin Dashboard loaded successfully');
+    </script>
+</body>
+</html>

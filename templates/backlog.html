@@ -1,0 +1,2018 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CUTM Result Portal</title>
+
+    <!-- jQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <!-- Bootstrap CSS -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+    <!-- AOS Animation -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary-color: #1e40af;
+            --primary-dark: #1e3a8a;
+            --accent-color: #3b82f6;
+            --accent-light: #60a5fa;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --danger-color: #ef4444;
+            --gradient-bg: linear-gradient(135deg, #1e40af 0%, #3b82f6 50%, #60a5fa 100%);
+            --card-bg: rgba(255, 255, 255, 0.98);
+            --glass-border: rgba(59, 130, 246, 0.1);
+            --text-dark: #1f2937;
+            --text-muted: #6b7280;
+            --shadow-light: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-medium: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --shadow-large: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --radius-xl: 20px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: var(--gradient-bg);
+            color: var(--text-dark);
+            overflow-x: hidden;
+            position: relative;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        /* Animated Background Elements */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(59, 130, 246, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(30, 64, 175, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(96, 165, 250, 0.06) 0%, transparent 50%);
+            z-index: -2;
+            animation: backgroundFloat 20s ease-in-out infinite alternate;
+        }
+
+        @keyframes backgroundFloat {
+            0% { transform: translate(0, 0) rotate(0deg); }
+            100% { transform: translate(-10px, -10px) rotate(1deg); }
+        }
+
+        /* Professional floating elements with morphing */
+        .floating-shapes {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .shape {
+            position: absolute;
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.08), rgba(30, 64, 175, 0.05));
+            border-radius: 50%;
+            animation: floatAndMorph 20s ease-in-out infinite;
+            filter: blur(1px);
+        }
+
+        .shape:nth-child(1) { 
+            width: 120px; 
+            height: 120px; 
+            left: 10%; 
+            top: 20%;
+            animation-delay: 0s; 
+        }
+        .shape:nth-child(2) { 
+            width: 80px; 
+            height: 80px; 
+            right: 15%; 
+            top: 60%;
+            animation-delay: 7s; 
+        }
+        .shape:nth-child(3) { 
+            width: 150px; 
+            height: 150px; 
+            left: 60%; 
+            bottom: 30%;
+            animation-delay: 14s; 
+        }
+
+        @keyframes floatAndMorph {
+            0%, 100% { 
+                transform: translateY(0) scale(1) rotate(0deg); 
+                border-radius: 50%; 
+                opacity: 0.1; 
+            }
+            25% { 
+                transform: translateY(-20px) scale(1.1) rotate(90deg); 
+                border-radius: 40% 60% 30% 70%; 
+                opacity: 0.15; 
+            }
+            50% { 
+                transform: translateY(-40px) scale(0.9) rotate(180deg); 
+                border-radius: 60% 40% 60% 40%; 
+                opacity: 0.08; 
+            }
+            75% { 
+                transform: translateY(-15px) scale(1.05) rotate(270deg); 
+                border-radius: 30% 70% 50% 50%; 
+                opacity: 0.12; 
+            }
+        }
+
+        /* Enhanced Navbar with slide-down animation */
+        .navbar {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+            padding: 1rem 0;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            transform: translateY(-100%);
+            animation: slideDown 1s ease-out 0.5s forwards;
+        }
+
+        @keyframes slideDown {
+            to { transform: translateY(0); }
+        }
+
+        .navbar.scrolled {
+            background: rgba(255, 255, 255, 0.98);
+            box-shadow: var(--shadow-medium);
+            padding: 0.75rem 0;
+        }
+
+        .navbar-brand {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 700;
+            color: var(--primary-color) !important;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .navbar-brand:hover {
+            color: var(--accent-color) !important;
+            transform: translateY(-1px) scale(1.02);
+        }
+
+        .navbar-brand img {
+            margin-right: 12px;
+            border-radius: var(--radius-sm);
+            box-shadow: var(--shadow-light);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            animation: logoSpin 3s ease-in-out 2s infinite;
+        }
+
+        @keyframes logoSpin {
+            0%, 90%, 100% { transform: rotate(0deg); }
+            45% { transform: rotate(5deg) scale(1.05); }
+        }
+
+        .navbar-brand:hover img {
+            box-shadow: var(--shadow-medium);
+            transform: scale(1.1) rotate(10deg);
+        }
+
+        .nav-link {
+            color: var(--text-dark) !important;
+            font-weight: 500;
+            font-size: 0.95rem;
+            margin: 0 0.5rem;
+            padding: 0.75rem 1rem !important;
+            border-radius: var(--radius-md);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-link::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--accent-color), var(--accent-light));
+            transform: translateY(100%) scale(0.8);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: -1;
+            border-radius: var(--radius-md);
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            transition: all 0.6s ease;
+            transform: translate(-50%, -50%);
+            z-index: -1;
+        }
+
+        .nav-link:hover::before {
+            transform: translateY(0) scale(1);
+        }
+
+        .nav-link:hover::after {
+            width: 120%;
+            height: 300%;
+        }
+
+        .nav-link:hover {
+            color: white !important;
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: var(--shadow-medium);
+        }
+
+        .nav-link.active {
+            background: linear-gradient(135deg, var(--accent-color), var(--accent-light));
+            color: white !important;
+        }
+
+        .nav-link i {
+            margin-right: 0.5rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .nav-link:hover i {
+            transform: scale(1.2) rotate(15deg);
+            animation: iconBounce 0.6s ease-in-out;
+        }
+
+        @keyframes iconBounce {
+            0%, 100% { transform: scale(1.2) rotate(15deg); }
+            50% { transform: scale(1.4) rotate(25deg); }
+        }
+
+        /* Main container */
+        .main-container {
+            min-height: 100vh;
+            padding-top: 120px;
+            padding-bottom: 80px;
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+        }
+
+        /* Main container card */
+        .container-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(25px);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-xl);
+            padding: 50px 40px;
+            box-shadow: var(--shadow-large);
+            width: 90%;
+            max-width: 10000px;
+            position: relative;
+            overflow: hidden;
+            transform: scale(0.95);
+            opacity: 0;
+            animation: containerReveal 1s ease-out 0.8s forwards;
+        }
+
+        @keyframes containerReveal {
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .container-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--accent-color), transparent);
+        }
+
+        /* Header section */
+        .header-section {
+            text-align: center;
+            margin-bottom: 50px;
+            position: relative;
+        }
+
+        .header-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--accent-color), var(--primary-color));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 30px;
+            font-size: 2rem;
+            color: white;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header-icon::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            border-radius: 50%;
+            transform: scale(0);
+            transition: transform 0.4s ease;
+        }
+
+        .header-icon:hover::before {
+            transform: scale(1);
+        }
+
+        .header-icon:hover {
+            transform: scale(1.1) rotate(15deg);
+            box-shadow: 0 15px 30px rgba(59, 130, 246, 0.4);
+        }
+
+        .header-icon i {
+            position: relative;
+            z-index: 1;
+            animation: iconPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes iconPulse {
+            0%, 100% { 
+                text-shadow: 
+                    0 0 5px rgba(255, 255, 255, 0.5),
+                    0 0 10px rgba(255, 255, 255, 0.3),
+                    0 0 15px rgba(255, 255, 255, 0.1);
+            }
+            50% { 
+                text-shadow: 
+                    0 0 10px rgba(255, 255, 255, 0.8),
+                    0 0 20px rgba(255, 255, 255, 0.5),
+                    0 0 30px rgba(255, 255, 255, 0.2);
+            }
+        }
+
+        .main-title {
+            font-family: 'Poppins', serif;
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: var(--primary-color);
+            opacity: 0;
+            transform: translateY(50px) scale(0.9);
+            animation: titleReveal 1.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) 1.2s forwards;
+            position: relative;
+        }
+
+        .main-title::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.3), transparent);
+            transform: translateX(-100%);
+            animation: titleShine 2s ease-in-out 3s;
+        }
+
+        @keyframes titleReveal {
+            0% { 
+                opacity: 0; 
+                transform: translateY(50px) scale(0.9) rotate(-5deg); 
+                filter: blur(10px);
+            }
+            50% { 
+                opacity: 0.8; 
+                transform: translateY(10px) scale(1.02) rotate(1deg); 
+                filter: blur(2px);
+            }
+            100% { 
+                opacity: 1; 
+                transform: translateY(0) scale(1) rotate(0deg); 
+                filter: blur(0);
+            }
+        }
+
+        @keyframes titleShine {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            margin-bottom: 30px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: subtitleFadeIn 1s ease-out 1.8s forwards;
+        }
+
+        @keyframes subtitleFadeIn {
+            to { 
+                opacity: 0.9; 
+                transform: translateY(0); 
+            }
+        }
+
+        /* Search form */
+        .search-form {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .search-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .search-box {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(15px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 30px;
+            transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+            transform: translateY(50px) rotateX(10deg);
+            opacity: 0;
+        }
+
+        .search-box.animate {
+            transform: translateY(0) rotateX(0deg);
+            opacity: 1;
+        }
+
+        .search-box::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(59, 130, 246, 0.08) 0%, transparent 70%);
+            transform: scale(0);
+            transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            pointer-events: none;
+        }
+
+        .search-box::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(45deg, transparent 48%, rgba(255, 255, 255, 0.1) 49%, rgba(255, 255, 255, 0.1) 51%, transparent 52%);
+            transform: translateX(-100%);
+            transition: transform 0.6s ease;
+        }
+
+        .search-box:hover::before {
+            transform: scale(1);
+        }
+
+        .search-box:hover::after {
+            transform: translateX(100%);
+        }
+
+        .search-box:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: var(--shadow-large);
+            border-color: var(--accent-color);
+        }
+
+        /* Enhanced Search Box for Subject Code with Filters */
+        .enhanced-search-box {
+            min-height: 420px;
+            padding: 35px;
+        }
+
+        .filter-row {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            border: 1px solid var(--glass-border);
+            position: relative;
+            z-index: 2;
+        }
+
+        .filter-label {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            min-width: 140px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .filter-select {
+            flex: 1;
+            padding: 10px 14px;
+            border: 2px solid var(--glass-border);
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.9);
+            color: var(--text-dark);
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .filter-select:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+            transform: translateY(-1px);
+        }
+
+        .search-box-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 25px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .search-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--accent-color), var(--primary-color));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: white;
+            transition: all 0.4s ease;
+        }
+
+        .search-box:hover .search-icon {
+            transform: scale(1.1) rotate(15deg);
+            box-shadow: 0 8px 20px rgba(59, 130, 246, 0.4);
+        }
+
+        .search-label {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin: 0;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 18px 24px;
+            border: 2px solid var(--glass-border);
+            border-radius: 16px;
+            background: rgba(255, 255, 255, 0.9);
+            color: var(--text-dark);
+            font-size: 16px;
+            font-weight: 500;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            backdrop-filter: blur(10px);
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .search-input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .search-input:focus {
+            background: rgba(255, 255, 255, 1);
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+            transform: translateY(-2px);
+        }
+
+        /* Enhanced button */
+        .search-btn {
+            background: linear-gradient(135deg, var(--accent-color), var(--primary-color));
+            border: none;
+            color: white;
+            font-weight: 700;
+            font-size: 16px;
+            border-radius: 50px;
+            padding: 15px 35px;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            box-shadow: var(--shadow-medium);
+            z-index: 2;
+        }
+
+        .search-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            transition: left 0.4s ease;
+            z-index: -1;
+        }
+
+        .search-btn::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            transition: all 0.6s ease;
+            transform: translate(-50%, -50%);
+        }
+
+        .search-btn:hover::before {
+            left: 0;
+        }
+
+        .search-btn:hover::after {
+            width: 300%;
+            height: 300%;
+        }
+
+        .search-btn:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 15px 30px rgba(59, 130, 246, 0.5);
+            animation: buttonPulse 1.5s ease-in-out infinite;
+        }
+
+        @keyframes buttonPulse {
+            0%, 100% { 
+                box-shadow: 0 15px 30px rgba(59, 130, 246, 0.5);
+            }
+            50% { 
+                box-shadow: 0 15px 30px rgba(59, 130, 246, 0.8), 0 0 20px rgba(59, 130, 246, 0.6);
+            }
+        }
+
+        /* Search criteria display */
+        .search-criteria-display {
+            background: rgba(59, 130, 246, 0.08);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 20px;
+            animation: fadeInUp 0.5s ease;
+        }
+
+        .search-criteria-display h4 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .criteria-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .criteria-tag {
+            background: var(--accent-color);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        /* Statistics Dashboard */
+        .statistics-dashboard {
+            background: rgba(59, 130, 246, 0.03);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 25px;
+            margin: 25px 0;
+            animation: fadeInUp 0.8s ease;
+        }
+
+        .stats-section {
+            margin-bottom: 25px;
+        }
+
+        .stats-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .stats-section h4 {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 15px;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 12px;
+            padding: 15px;
+            text-align: center;
+            box-shadow: var(--shadow-light);
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-medium);
+        }
+
+        .stat-number {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--text-muted);
+        }
+
+        .branch-stat .stat-number {
+            color: var(--success-color);
+        }
+
+        .year-stat .stat-number {
+            color: var(--warning-color);
+        }
+
+        /* Divider */
+        .divider {
+            margin: 50px 0;
+            text-align: center;
+            position: relative;
+        }
+
+        .divider::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.3), transparent);
+            transform: translateY(-50%);
+        }
+
+        .divider-text {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(15px);
+            border: 1px solid var(--glass-border);
+            border-radius: 50px;
+            padding: 12px 30px;
+            display: inline-block;
+            color: var(--text-muted);
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Message styling */
+        .message {
+            background: rgba(239, 68, 68, 0.15);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            border-radius: 16px;
+            padding: 20px;
+            margin: 30px 0;
+            color: #fca5a5;
+            font-weight: 600;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            font-size: 1.1rem;
+            animation: slideInDown 0.5s ease;
+        }
+
+        .message i {
+            font-size: 1.5rem;
+            color: var(--danger-color);
+        }
+
+        @keyframes slideInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Results section */
+        .results-section {
+            margin-top: 50px;
+            animation: fadeInUp 0.8s ease;
+        }
+
+        .results-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .results-title {
+            font-family: 'Poppins', serif;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin: 0;
+        }
+
+        .results-count {
+            background: rgba(59, 130, 246, 0.1);
+            backdrop-filter: blur(15px);
+            border: 1px solid var(--glass-border);
+            border-radius: 50px;
+            padding: 8px 20px;
+            color: var(--accent-color);
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        /* Download Options */
+        .download-section {
+            background: rgba(59, 130, 246, 0.05);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            margin: 30px 0;
+            text-align: center;
+            animation: fadeInUp 0.8s ease;
+        }
+
+        .download-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .download-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .download-btn {
+            background: linear-gradient(135deg, var(--success-color), #059669);
+            border: none;
+            color: white;
+            font-weight: 600;
+            font-size: 14px;
+            border-radius: 50px;
+            padding: 12px 25px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            box-shadow: var(--shadow-light);
+        }
+
+        .download-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #059669, var(--success-color));
+            transition: left 0.4s ease;
+            z-index: -1;
+        }
+
+        .download-btn:hover::before {
+            left: 0;
+        }
+
+        .download-btn:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 10px 20px rgba(16, 185, 129, 0.3);
+            color: white;
+            text-decoration: none;
+        }
+
+        .download-btn i {
+            font-size: 1rem;
+            transition: transform 0.3s ease;
+        }
+
+        .download-btn:hover i {
+            transform: translateY(-2px);
+        }
+
+        /* PDF specific button */
+        .download-btn.pdf {
+            background: linear-gradient(135deg, var(--danger-color), #dc2626);
+        }
+
+        .download-btn.pdf::before {
+            background: linear-gradient(135deg, #dc2626, var(--danger-color));
+        }
+
+        .download-btn.pdf:hover {
+            box-shadow: 0 10px 20px rgba(239, 68, 68, 0.3);
+        }
+
+        /* Excel specific button */
+        .download-btn.excel {
+            background: linear-gradient(135deg, var(--warning-color), #d97706);
+        }
+
+        .download-btn.excel::before {
+            background: linear-gradient(135deg, #d97706, var(--warning-color));
+        }
+
+        .download-btn.excel:hover {
+            box-shadow: 0 10px 20px rgba(245, 158, 11, 0.3);
+        }
+
+        /* Enhanced table */
+        .table-container {
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: var(--shadow-medium);
+            background: white;
+            backdrop-filter: blur(15px);
+            border: 1px solid var(--glass-border);
+        }
+
+        .modern-table {
+            width: 100%;
+            margin: 0;
+            background: transparent;
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+
+        .modern-table thead {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(37, 99, 235, 0.15));
+            backdrop-filter: blur(10px);
+        }
+
+        .modern-table th {
+            padding: 20px 16px;
+            text-align: center;
+            border: none;
+            color: var(--text-dark);
+            font-weight: 700;
+            font-size: 0.95rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            position: relative;
+        }
+
+        .modern-table th::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--accent-color), transparent);
+        }
+
+        .modern-table td {
+            padding: 18px 16px;
+            text-align: center;
+            border: none;
+            color: var(--text-dark);
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+        }
+
+        .modern-table tbody tr {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border-bottom: 1px solid rgba(59, 130, 246, 0.1);
+            animation: fadeInRow 0.6s ease forwards;
+            opacity: 0;
+        }
+
+        .modern-table tbody tr:last-child {
+            border-bottom: none;
+        }
+
+        .modern-table tbody tr:hover {
+            background: rgba(59, 130, 246, 0.05);
+            transform: scale(1.01);
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.1);
+        }
+
+        @keyframes fadeInRow {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Grade styling */
+        .grade-badge {
+            padding: 6px 12px;
+            border-radius: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.85rem;
+        }
+
+        .grade-o, .grade-a, .grade-s { background: rgba(16, 185, 129, 0.2); color: #10b981; }
+        .grade-e, .grade-b { background: rgba(34, 197, 94, 0.2); color: #22c55e; }
+        .grade-c { background: rgba(245, 158, 11, 0.2); color: #f59e0b; }
+        .grade-d, .grade-f, .grade-m, .grade-i, .grade-r { background: rgba(239, 68, 68, 0.2); color: #ef4444; }
+
+        /* Loading overlay */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--gradient-bg);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: all 0.8s ease;
+        }
+
+        .loader {
+            width: 60px;
+            height: 60px;
+            border: 4px solid rgba(255, 255, 255, 0.2);
+            border-top: 4px solid white;
+            border-radius: 50%;
+            animation: loaderSpin 1s linear infinite;
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+
+        .loader::before {
+            content: '';
+            position: absolute;
+            inset: 8px;
+            border: 2px solid transparent;
+            border-top: 2px solid rgba(255, 255, 255, 0.6);
+            border-radius: 50%;
+            animation: loaderSpin 2s linear infinite reverse;
+        }
+
+        @keyframes loaderSpin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            color: white;
+            font-size: 1.2rem;
+            font-weight: 600;
+            animation: loadingTextPulse 1.5s ease-in-out infinite;
+            letter-spacing: 1px;
+        }
+
+        @keyframes loadingTextPulse {
+            0%, 100% { opacity: 0.7; }
+            50% { opacity: 1; }
+        }
+
+        /* Scroll to top */
+        .scroll-to-top {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--accent-color), var(--primary-color));
+            border: none;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 1000;
+            box-shadow: var(--shadow-medium);
+            animation: scrollTopPulse 2s ease-in-out infinite;
+        }
+
+        .scroll-to-top.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        @keyframes scrollTopPulse {
+            0%, 100% { 
+                box-shadow: var(--shadow-medium);
+            }
+            50% { 
+                box-shadow: 0 10px 25px rgba(59, 130, 246, 0.6), 0 0 20px rgba(59, 130, 246, 0.4);
+                transform: scale(1.05);
+            }
+        }
+
+        .scroll-to-top:hover {
+            transform: scale(1.15);
+            box-shadow: 0 15px 35px rgba(59, 130, 246, 0.8);
+            animation: none;
+        }
+
+        .scroll-to-top i {
+            color: white;
+            font-size: 1.2rem;
+            transition: transform 0.3s ease;
+        }
+
+        .scroll-to-top:hover i {
+            transform: translateY(-2px);
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .main-container {
+                padding-top: 100px;
+                padding-bottom: 60px;
+            }
+
+            .container-card {
+                width: 95%;
+                padding: 30px 20px;
+                border-radius: 24px;
+            }
+
+            .search-section {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .search-box {
+                padding: 25px 20px;
+            }
+
+            .enhanced-search-box {
+                padding: 30px 20px;
+            }
+
+            .header-icon {
+                width: 60px;
+                height: 60px;
+                font-size: 1.5rem;
+            }
+
+            .main-title {
+                font-size: 2rem;
+            }
+
+            .table-container {
+                overflow-x: auto;
+            }
+
+            .modern-table {
+                min-width: 700px;
+            }
+
+            .results-header {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .nav-link {
+                margin: 0.25rem 0;
+            }
+
+            .download-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .download-btn {
+                width: 100%;
+                max-width: 250px;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+                gap: 10px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container-card {
+                margin: 0 10px;
+                padding: 25px 15px;
+            }
+
+            .search-box {
+                padding: 20px 15px;
+            }
+
+            .enhanced-search-box {
+                padding: 25px 15px;
+            }
+
+            .search-input {
+                padding: 15px 20px;
+            }
+
+            .search-btn {
+                width: 100%;
+                padding: 15px;
+            }
+        }
+
+        /* Animation delays for staggered effect */
+        .modern-table tbody tr:nth-child(1) { animation-delay: 0.1s; }
+        .modern-table tbody tr:nth-child(2) { animation-delay: 0.2s; }
+        .modern-table tbody tr:nth-child(3) { animation-delay: 0.3s; }
+        .modern-table tbody tr:nth-child(4) { animation-delay: 0.4s; }
+        .modern-table tbody tr:nth-child(5) { animation-delay: 0.5s; }
+        .modern-table tbody tr:nth-child(n+6) { animation-delay: 0.6s; }
+
+        /* Accessibility */
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loader"></div>
+        <div class="loading-text">Loading Backlog Search...</div>
+    </div>
+
+    <!-- Floating Background Shapes -->
+    <div class="floating-shapes">
+        <div class="shape"></div>
+        <div class="shape"></div>
+        <div class="shape"></div>
+    </div>
+
+    <!-- Enhanced Navbar -->
+    <header>
+        <nav class="navbar navbar-expand-lg" id="mainNavbar">
+            <div class="container">
+                <a class="navbar-brand" href="{{ url_for('home') }}">
+                    <img src="https://gajajyoti.cutm.ac.in/img/images-removebg-preview.png" alt="CUTM Logo" height="40">
+                    CUTM Portal
+                </a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span><i class="fas fa-bars" style="color: var(--primary-color);"></i></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav ml-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('home') }}">
+                                <i class="fas fa-home"></i> Home
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('home') }}#features">
+                                <i class="fas fa-star"></i> Features
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" href="{{ url_for('backlog') }}">
+                                <i class="fas fa-history"></i> Backlog
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('admin_login') }}">
+                                <i class="fas fa-user-shield"></i> Admin
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('about') }}">
+                                <i class="fas fa-info-circle"></i> About
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#footer">
+                                <i class="fas fa-envelope"></i> Contact
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Container -->
+    <div class="main-container">
+        <div class="container-card">
+            <!-- Header Section -->
+            <div class="header-section">
+                <div class="header-icon">
+                    <i class="fas fa-search-plus"></i>
+                </div>
+                <h1 class="main-title">Backlog Assessment Search</h1>
+                <p class="subtitle">
+                    Discover pending academic requirements with our advanced search system. 
+                    Find backlog information by registration number, subject code with branch/batch filters.
+                </p>
+            </div>
+
+            <!-- Search Form -->
+            <form method="POST" class="search-form">
+                <div class="search-section">
+                    <!-- Registration Search -->
+                    <div class="search-box animate" style="animation-delay: 0.3s;">
+                        <div class="search-box-header">
+                            <div class="search-icon">
+                                <i class="fas fa-id-card"></i>
+                            </div>
+                            <h3 class="search-label">Search by Registration</h3>
+                        </div>
+                        <input type="text" name="registration" class="search-input" 
+                               placeholder="Enter registration number (e.g., 220101120012)" 
+                               value="{{ request.form.registration if request.form.registration }}">
+                        <button type="submit" name="search_type" value="registration" class="search-btn">
+                            <i class="fas fa-search"></i> Search by Reg No
+                        </button>
+                    </div>
+
+                    <!-- Enhanced Subject Code Search with Filters -->
+                    <div class="search-box enhanced-search-box animate" style="animation-delay: 0.4s;">
+                        <div class="search-box-header">
+                            <div class="search-icon">
+                                <i class="fas fa-code"></i>
+                            </div>
+                            <h3 class="search-label">Search by Subject Code</h3>
+                        </div>
+                        
+                        <!-- Subject Code Input -->
+                        <input type="text" name="subject_code" class="search-input" 
+                               placeholder="Enter subject code (e.g., CUTM1031, CUTM1603)" 
+                               value="{{ request.form.subject_code if request.form.subject_code }}">
+                        
+                        <!-- Branch Filter -->
+                        <div class="filter-row">
+                            <label class="filter-label">
+                                <i class="fas fa-graduation-cap"></i> Branch:
+                            </label>
+                            <select name="branch" class="filter-select">
+                                <option value="">All Branches</option>
+                                <option value="Civil" {{ 'selected' if request.form.branch == 'Civil' }}>Civil Engineering</option>
+                                <option value="CSE" {{ 'selected' if request.form.branch == 'CSE' }}>Computer Science Engineering</option>
+                                <option value="ECE" {{ 'selected' if request.form.branch == 'ECE' }}>Electronics & Communication Engineering</option>
+                                <option value="EEE" {{ 'selected' if request.form.branch == 'EEE' }}>Electrical & Electronics Engineering</option>
+                                <option value="Mechanical" {{ 'selected' if request.form.branch == 'Mechanical' }}>Mechanical Engineering</option>
+                            </select>
+                        </div>
+                        
+                        <!-- Batch Filter -->
+                        <div class="filter-row">
+                            <label class="filter-label">
+                                <i class="fas fa-calendar-alt"></i> Batch:
+                            </label>
+                            <select name="year" class="filter-select">
+                                <option value="">All Batches</option>
+                                <option value="2025" {{ 'selected' if request.form.year == '25' }}>2025 Batch</option>
+                                <option value="2024" {{ 'selected' if request.form.year == '24' }}>2024 Batch</option>
+                                <option value="2023" {{ 'selected' if request.form.year == '23' }}>2023 Batch</option>
+                                <option value="22" {{ 'selected' if request.form.year == '22' }}>2022 Batch</option>
+                                <option value="2021" {{ 'selected' if request.form.year == '21' }}>2021 Batch</option>
+                                <option value="2020" {{ 'selected' if request.form.year == '20' }}>2020 Batch</option>
+                            </select>
+                        </div>
+                        
+                        <button type="submit" name="search_type" value="subject_code" class="search-btn">
+                            <i class="fas fa-search"></i> Search with Filters
+                        </button>
+                        
+                        <!-- Clear Filters Button -->
+                        <button type="button" onclick="clearFilters()" class="search-btn" style="background: linear-gradient(135deg, #6b7280, #4b5563); margin-top: 10px;">
+                            <i class="fas fa-times"></i> Clear Filters
+                        </button>
+                    </div>
+                </div>
+            </form>
+
+            <div class="divider">
+                <div class="divider-text">
+                    <i class="fas fa-chart-line"></i> Search Results
+                </div>
+            </div>
+
+            <!-- Search Criteria Display -->
+            {% if search_criteria %}
+            <div class="search-criteria-display">
+                <h4><i class="fas fa-info-circle"></i> Search Applied:</h4>
+                <div class="criteria-tags">
+                    {% for criteria in search_criteria %}
+                    <span class="criteria-tag">{{ criteria }}</span>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Message Display -->
+            {% if message %}
+                <div class="message">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <span>{{ message }}</span>
+                </div>
+            {% endif %}
+
+            <!-- Results Display -->
+            {% if result %}
+                <div class="results-section">
+                    <div class="results-header">
+                        <h2 class="results-title">Backlog Assessment Results</h2>
+                        <div class="results-count">
+                            <i class="fas fa-list-ol"></i> {{ count }} Record{{ 's' if count != 1 else '' }} Found
+                        </div>
+                    </div>
+
+                    <!-- Statistics Dashboard -->
+                    {% if branch_stats or year_stats %}
+                    <div class="statistics-dashboard">
+                        {% if branch_stats %}
+                        <div class="stats-section">
+                            <h4><i class="fas fa-graduation-cap"></i> Branch-wise Distribution</h4>
+                            <div class="stats-grid">
+                                {% for branch, count in branch_stats.items() %}
+                                <div class="stat-card branch-stat">
+                                    <div class="stat-number">{{ count }}</div>
+                                    <div class="stat-label">{{ branch }}</div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        {% endif %}
+
+                        {% if year_stats %}
+                        <div class="stats-section">
+                            <h4><i class="fas fa-calendar-alt"></i> Year-wise Distribution</h4>
+                            <div class="stats-grid">
+                                {% for year, count in year_stats.items() %}
+                                <div class="stat-card year-stat">
+                                    <div class="stat-number">{{ count }}</div>
+                                    <div class="stat-label">{{ year }} Batch</div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+                    {% endif %}
+
+                    <!-- Download Section -->
+                    <div class="download-section">
+                        <div class="download-title">
+                            <i class="fas fa-download"></i>
+                            Export Results
+                        </div>
+                        <div class="download-buttons">
+                            <button class="download-btn" onclick="downloadCSV()">
+                                <i class="fas fa-file-csv"></i>
+                                Download CSV
+                            </button>
+                            <button class="download-btn excel" onclick="downloadExcel()">
+                                <i class="fas fa-file-excel"></i>
+                                Download Excel
+                            </button>
+                            <button class="download-btn pdf" onclick="downloadPDF()">
+                                <i class="fas fa-file-pdf"></i>
+                                Download PDF
+                            </button>
+                            <button class="download-btn" onclick="printResults()" style="background: linear-gradient(135deg, #6b7280, #4b5563);">
+                                <i class="fas fa-print"></i>
+                                Print Results
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="table-container" id="resultsTable">
+                        <table class="modern-table">
+                            <thead>
+                                <tr>
+                                    <th><i class="fas fa-id-badge"></i> Reg No</th>
+                                    <th><i class="fas fa-user"></i> Name</th>
+                                    {% if branch_stats %}<th><i class="fas fa-graduation-cap"></i> Branch</th>{% endif %}
+                                    {% if year_stats %}<th><i class="fas fa-calendar-alt"></i> Batch</th>{% endif %}
+                                    <th><i class="fas fa-calendar"></i> Semester</th>
+                                    <th><i class="fas fa-code"></i> Subject Code</th>
+                                    <th><i class="fas fa-book-open"></i> Subject Name</th>
+                                    <th><i class="fas fa-award"></i> Grade</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for row in result %}
+                                    <tr>
+                                        <td><strong>{{ row.Reg_No }}</strong></td>
+                                        <td>{{ row.Name }}</td>
+                                        {% if branch_stats %}<td><span class="badge badge-info">{{ row.Branch_Short if row.Branch_Short else 'Unknown' }}</span></td>{% endif %}
+                                        {% if year_stats %}<td><span class="badge badge-secondary">{{ row.Year if row.Year else 'Unknown' }}</span></td>{% endif %}
+                                        <td><span class="badge badge-primary">{{ row.Sem }}</span></td>
+                                        <td><code>{{ row.Subject_Code }}</code></td>
+                                        <td>{{ row.Subject_Name }}</td>
+                                        <td>
+                                            <span class="grade-badge grade-{{ row.Grade|lower }}">
+                                                {{ row.Grade }}
+                                            </span>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Hidden data for download -->
+                <div id="downloadData" style="display: none;">
+                    {{ result|tojson }}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Scroll to Top Button -->
+    <div class="scroll-to-top" id="scrollToTop">
+        <i class="fas fa-chevron-up"></i>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    
+    <script>
+        // Initialize AOS
+        AOS.init({ 
+            duration: 1000, 
+            once: true,
+            offset: 100,
+            easing: 'ease-out-cubic'
+        });
+
+        // Enhanced loading overlay with delay
+        window.addEventListener('load', function() {
+            setTimeout(() => {
+                const overlay = document.getElementById('loadingOverlay');
+                overlay.style.opacity = '0';
+                setTimeout(() => {
+                    overlay.style.display = 'none';
+                }, 800);
+            }, 2000);
+        });
+
+        // Enhanced navbar scroll effect
+        $(window).scroll(function() {
+            const scrollTop = $(window).scrollTop();
+            const navbar = $('#mainNavbar');
+            const scrollToTop = $('#scrollToTop');
+            
+            if (scrollTop > 100) {
+                navbar.addClass('scrolled');
+                scrollToTop.addClass('show');
+            } else {
+                navbar.removeClass('scrolled');
+                scrollToTop.removeClass('show');
+            }
+        });
+
+        // Smooth scroll to top with easing
+        $('#scrollToTop').click(function() {
+            $('html, body').animate({
+                scrollTop: 0
+            }, 1000, 'easeInOutCubic');
+        });
+
+        // Enhanced easing functions
+        $.extend($.easing, {
+            easeInOutCubic: function (x, t, b, c, d) {
+                if ((t/=d/2) < 1) return c/2*t*t*t + b;
+                return c/2*((t-=2)*t*t + 2) + b;
+            },
+            easeOutCubic: function (x, t, b, c, d) {
+                return c*((t=t/d-1)*t*t + 1) + b;
+            }
+        });
+
+        // Clear all filter inputs
+        function clearFilters() {
+            document.querySelector('input[name="registration"]').value = '';
+            document.querySelector('input[name="subject_code"]').value = '';
+            document.querySelector('select[name="branch"]').value = '';
+            document.querySelector('select[name="year"]').value = '';
+        }
+
+        // Download Functions
+        function getTableData() {
+            const dataDiv = document.getElementById('downloadData');
+            if (dataDiv) {
+                return JSON.parse(dataDiv.textContent);
+            }
+            return [];
+        }
+
+        // Enhanced CSV Download with Branch and Batch
+        function downloadCSV() {
+            const data = getTableData();
+            if (data.length === 0) return;
+
+            let csv = 'Reg No,Name,Branch,Batch,Semester,Subject Code,Subject Name,Grade\n';
+            
+            data.forEach(row => {
+                csv += `${row.Reg_No},"${row.Name}","${row.Branch_Short || 'Unknown'}","${row.Year || 'Unknown'}",${row.Sem},${row.Subject_Code},"${row.Subject_Name}",${row.Grade}\n`;
+            });
+
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            
+            link.setAttribute('href', url);
+            link.setAttribute('download', `backlog_results_${new Date().toISOString().split('T')[0]}.csv`);
+            link.style.visibility = 'hidden';
+            
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            
+            // Show success animation
+            showDownloadSuccess('CSV');
+        }
+
+        // Enhanced Excel Download with Branch and Batch
+        function downloadExcel() {
+            const data = getTableData();
+            if (data.length === 0) return;
+
+            const ws = XLSX.utils.json_to_sheet(data.map(row => ({
+                'Registration Number': row.Reg_No,
+                'Student Name': row.Name,
+                'Branch': row.Branch_Short || 'Unknown',
+                'Batch': row.Year || 'Unknown',
+                'Semester': row.Sem,
+                'Subject Code': row.Subject_Code,
+                'Subject Name': row.Subject_Name,
+                'Grade': row.Grade
+            })));
+
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, 'Backlog Results');
+            
+            XLSX.writeFile(wb, `backlog_results_${new Date().toISOString().split('T')[0]}.xlsx`);
+            
+            // Show success animation
+            showDownloadSuccess('Excel');
+        }
+
+        // PDF Download
+        function downloadPDF() {
+            const data = getTableData();
+            if (data.length === 0) return;
+
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            
+            // Add title
+            doc.setFontSize(18);
+            doc.text('CUTM Backlog Assessment Results', 20, 20);
+            
+            // Add date
+            doc.setFontSize(12);
+            doc.text(`Generated on: ${new Date().toLocaleDateString()}`, 20, 30);
+            
+            // Prepare table data
+            const tableData = data.map(row => [
+                row.Reg_No,
+                row.Name,
+                row.Branch_Short || 'Unknown',
+                row.Year || 'Unknown',
+                row.Sem,
+                row.Subject_Code,
+                row.Subject_Name,
+                row.Grade
+            ]);
+
+            // Add table
+            doc.autoTable({
+                head: [['Reg No', 'Name', 'Branch', 'Batch', 'Semester', 'Subject Code', 'Subject Name', 'Grade']],
+                body: tableData,
+                startY: 40,
+                theme: 'striped',
+                headStyles: {
+                    fillColor: [59, 130, 246],
+                    textColor: [255, 255, 255],
+                    fontStyle: 'bold'
+                },
+                styles: {
+                    fontSize: 10,
+                    cellPadding: 5
+                }
+            });
+
+            doc.save(`backlog_results_${new Date().toISOString().split('T')[0]}.pdf`);
+            
+            // Show success animation
+            showDownloadSuccess('PDF');
+        }
+
+        // Print Function
+        function printResults() {
+            const printWindow = window.open('', '_blank');
+            const table = document.querySelector('.modern-table').outerHTML;
+            
+            printWindow.document.write(`
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <title>CUTM Backlog Assessment Results</title>
+                    <style>
+                        body { font-family: Arial, sans-serif; margin: 20px; }
+                        .header { text-align: center; margin-bottom: 30px; }
+                        .header h1 { color: #1e40af; margin-bottom: 10px; }
+                        .header p { color: #6b7280; }
+                        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+                        th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+                        th { background-color: #3b82f6; color: white; font-weight: bold; }
+                        tr:nth-child(even) { background-color: #f8fafc; }
+                        .grade-badge { padding: 4px 8px; border-radius: 8px; font-weight: bold; }
+                        .grade-o, .grade-a, .grade-s { background-color: #10b981; color: white; }
+                        .grade-e, .grade-b { background-color: #22c55e; color: white; }
+                        .grade-c { background-color: #f59e0b; color: white; }
+                        .grade-d, .grade-f, .grade-m, .grade-i, .grade-r { background-color: #ef4444; color: white; }
+                    </style>
+                </head>
+                <body>
+                    <div class="header">
+                        <h1>CUTM Backlog Assessment Results</h1>
+                        <p>Generated on: ${new Date().toLocaleDateString()}</p>
+                    </div>
+                    ${table}
+                </body>
+                </html>
+            `);
+            
+            printWindow.document.close();
+            printWindow.print();
+            
+            // Show success animation
+            showDownloadSuccess('Print');
+        }
+
+        // Success Animation
+        function showDownloadSuccess(type) {
+            const toast = document.createElement('div');
+            toast.innerHTML = `
+                <div style="
+                    position: fixed;
+                    top: 20px;
+                    right: 20px;
+                    background: linear-gradient(135deg, #10b981, #059669);
+                    color: white;
+                    padding: 15px 25px;
+                    border-radius: 50px;
+                    box-shadow: 0 10px 25px rgba(16, 185, 129, 0.3);
+                    z-index: 10000;
+                    animation: slideInRight 0.5s ease;
+                    font-weight: 600;
+                    display: flex;
+                    align-items: center;
+                    gap: 10px;
+                ">
+                    <i class="fas fa-check-circle"></i>
+                    ${type} download started successfully!
+                </div>
+            `;
+            
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.style.animation = 'slideOutRight 0.5s ease';
+                setTimeout(() => {
+                    document.body.removeChild(toast);
+                }, 500);
+            }, 3000);
+        }
+
+        // Add CSS for toast animations
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideInRight {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+            @keyframes slideOutRight {
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(100%); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Intersection Observer for enhanced animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver(function(entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    if (entry.target.classList.contains('search-box')) {
+                        entry.target.classList.add('animate');
+                    }
+                }
+            });
+        }, observerOptions);
+
+        // Observe all animated elements
+        document.querySelectorAll('.search-box').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Add input validation and formatting
+        $('input[name="registration"]').on('input', function() {
+            let value = $(this).val().replace(/\D/g, ''); // Remove non-digits
+            if (value.length > 12) {
+                value = value.slice(0, 12); // Limit to 12 digits
+            }
+            $(this).val(value);
+        });
+
+        // Add subject code formatting
+        $('input[name="subject_code"]').on('input', function() {
+            let value = $(this).val().toUpperCase(); // Convert to uppercase
+            // Remove special characters except letters and numbers
+            value = value.replace(/[^A-Z0-9]/g, '');
+            if (value.length > 10) {
+                value = value.slice(0, 10); // Limit to 10 characters
+            }
+            $(this).val(value);
+        });
+
+        // Keyboard navigation improvements
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                $('.navbar-collapse').removeClass('show');
+            }
+            
+            if (e.key === 'Enter' && document.activeElement === document.getElementById('scrollToTop')) {
+                $('#scrollToTop').click();
+            }
+        });
+
+        // Auto-focus on appropriate input
+        $(document).ready(function() {
+            if ($('input[name="registration"]').val()) {
+                $('input[name="registration"]').focus();
+            } else if ($('input[name="subject_code"]').val()) {
+                $('input[name="subject_code"]').focus();
+            }
+            
+            // Initialize search box animations
+            setTimeout(() => {
+                $('.search-box').addClass('animate');
+            }, 1500);
+        });
+
+        // Enhanced button interactions
+        $('.search-btn, .download-btn').on('mouseenter', function() {
+            $(this).find('i').css('transform', 'translateX(5px)');
+        }).on('mouseleave', function() {
+            $(this).find('i').css('transform', 'translateX(0)');
+        });
+
+        // Parallax scrolling effects
+        $(window).on('scroll', function() {
+            const scrolled = $(window).scrollTop();
+            
+            // Floating shapes parallax
+            $('.shape').each(function(index) {
+                const speed = 0.2 + (index * 0.1);
+                $(this).css('transform', `translateY(${scrolled * speed}px) rotate(${scrolled * 0.1}deg)`);
+            });
+        });
+
+        // Initialize all animations on page load
+        $(document).ready(function() {
+            $('body').addClass('loaded');
+            
+            // Add random rotation to floating shapes
+            $('.shape').each(function() {
+                $(this).css('animation-delay', Math.random() * 10 + 's');
+            });
+        });
+
+        // Performance optimization
+        let ticking = false;
+        function requestTick() {
+            if (!ticking) {
+                requestAnimationFrame(updateAnimations);
+                ticking = true;
+            }
+        }
+
+            function updateAnimations() {
+            // Update scroll-based animations here
+            ticking = false;
+        }
+
+        window.addEventListener('scroll', requestTick, { passive: true });
+    </script>
+</body>
+</html>

@@ -1,0 +1,1249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View & Update Data - CUTM Portal</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <!-- AOS Animation -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" rel="stylesheet">
+    
+    <style>
+        :root {
+            /* Modern Color Palette */
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --success-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            --warning-gradient: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+            --danger-gradient: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+            --info-gradient: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            
+            /* Glass Effects */
+            --glass-light: rgba(255, 255, 255, 0.1);
+            --glass-medium: rgba(255, 255, 255, 0.15);
+            --glass-strong: rgba(255, 255, 255, 0.25);
+            --glass-border: rgba(255, 255, 255, 0.2);
+            --glass-backdrop: rgba(255, 255, 255, 0.95);
+            
+            /* Text Colors */
+            --text-primary: #2d3748;
+            --text-secondary: #4a5568;
+            --text-muted: #718096;
+            --text-light: #a0aec0;
+            --text-white: #ffffff;
+            
+            /* Shadows */
+            --shadow-soft: 0 10px 40px rgba(0, 0, 0, 0.08);
+            --shadow-medium: 0 20px 60px rgba(0, 0, 0, 0.12);
+            --shadow-strong: 0 30px 80px rgba(0, 0, 0, 0.16);
+            --shadow-glow: 0 0 40px rgba(102, 126, 234, 0.3);
+            
+            /* Border Radius */
+            --radius-sm: 12px;
+            --radius-md: 16px;
+            --radius-lg: 24px;
+            --radius-xl: 32px;
+            --radius-full: 50px;
+            
+            /* Spacing */
+            --space-xs: 0.5rem;
+            --space-sm: 1rem;
+            --space-md: 1.5rem;
+            --space-lg: 2rem;
+            --space-xl: 3rem;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+            background: var(--primary-gradient);
+            color: var(--text-primary);
+            overflow-x: hidden;
+            line-height: 1.6;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        /* Enhanced Background with Mesh Gradients */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 25% 25%, #667eea 0%, transparent 50%),
+                radial-gradient(circle at 75% 75%, #764ba2 0%, transparent 50%),
+                radial-gradient(circle at 50% 50%, #f093fb 0%, transparent 70%),
+                linear-gradient(45deg, transparent 30%, rgba(102, 126, 234, 0.1) 70%);
+            z-index: -2;
+            animation: meshFloat 25s ease-in-out infinite alternate;
+        }
+
+        @keyframes meshFloat {
+            0% { 
+                transform: scale(1) rotate(0deg); 
+                opacity: 0.4; 
+            }
+            100% { 
+                transform: scale(1.1) rotate(5deg); 
+                opacity: 0.6; 
+            }
+        }
+
+        /* Floating Elements */
+        .floating-shapes {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .shape {
+            position: absolute;
+            background: var(--glass-light);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            animation: floatAndMorph 30s ease-in-out infinite;
+        }
+
+        .shape:nth-child(1) { 
+            width: 120px; 
+            height: 120px; 
+            left: 5%; 
+            top: 15%;
+            border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+            animation-delay: 0s; 
+        }
+        .shape:nth-child(2) { 
+            width: 80px; 
+            height: 80px; 
+            right: 10%; 
+            top: 50%;
+            border-radius: 70% 30% 30% 70% / 60% 40% 60% 40%;
+            animation-delay: 10s; 
+        }
+        .shape:nth-child(3) { 
+            width: 150px; 
+            height: 150px; 
+            left: 60%; 
+            bottom: 25%;
+            border-radius: 50% 50% 80% 20% / 25% 75% 25% 75%;
+            animation-delay: 20s; 
+        }
+
+        @keyframes floatAndMorph {
+            0%, 100% { 
+                transform: translateY(0) scale(1) rotate(0deg); 
+                opacity: 0.1; 
+            }
+            25% { 
+                transform: translateY(-30px) scale(1.1) rotate(90deg); 
+                opacity: 0.15; 
+            }
+            50% { 
+                transform: translateY(-50px) scale(0.9) rotate(180deg); 
+                opacity: 0.08; 
+            }
+            75% { 
+                transform: translateY(-20px) scale(1.05) rotate(270deg); 
+                opacity: 0.12; 
+            }
+        }
+
+        .main-container {
+            background: var(--glass-backdrop);
+            backdrop-filter: blur(30px) saturate(1.8);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-xl);
+            padding: 40px;
+            box-shadow: var(--shadow-strong);
+            margin: 30px auto;
+            max-width: 1400px;
+            color: var(--text-primary);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .main-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--primary-gradient);
+            border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+        }
+
+        /* Enhanced Header */
+        .header-section {
+            display: flex;
+            justify-content: between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid var(--glass-border);
+        }
+
+        .main-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 2rem;
+            font-weight: 800;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .title-icon {
+            width: 50px;
+            height: 50px;
+            background: var(--primary-gradient);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+            box-shadow: var(--shadow-glow);
+        }
+
+        /* Enhanced Search Card */
+        .search-card {
+            background: var(--glass-medium);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-lg);
+            padding: 30px;
+            box-shadow: var(--shadow-soft);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 30px;
+        }
+
+        .search-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--success-gradient);
+            border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+        }
+
+        .search-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-medium);
+        }
+
+        .search-card h5 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Enhanced Student Info */
+        .student-info {
+            background: var(--success-gradient);
+            color: white;
+            padding: 30px;
+            border-radius: var(--radius-lg);
+            margin-bottom: 30px;
+            box-shadow: var(--shadow-medium);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .student-info::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+            animation: ripple 3s ease-in-out infinite;
+        }
+
+        @keyframes ripple {
+            0%, 100% { transform: scale(1); opacity: 0.3; }
+            50% { transform: scale(1.1); opacity: 0.1; }
+        }
+
+        .student-info h4 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            color: white;
+            font-weight: 700;
+        }
+
+        .student-info p {
+            font-size: 1rem;
+            margin-bottom: 0;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .student-avatar {
+            width: 80px;
+            height: 80px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: white;
+        }
+
+        .stats-box {
+            text-align: center;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: var(--radius-md);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .stats-box:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-3px);
+        }
+
+        .stats-number {
+            font-size: 1.8rem;
+            font-weight: 800;
+            display: block;
+            color: white;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .stats-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            color: rgba(255, 255, 255, 0.9);
+            font-weight: 500;
+        }
+
+        /* Enhanced Alerts */
+        .alert {
+            border-radius: var(--radius-md);
+            padding: 20px 25px;
+            margin-bottom: 25px;
+            backdrop-filter: blur(20px);
+            font-size: 1rem;
+            border: 1px solid;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .alert::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: currentColor;
+        }
+
+        .alert-success {
+            background: rgba(79, 172, 254, 0.1);
+            border-color: rgba(79, 172, 254, 0.3);
+            color: #0c4a6e;
+        }
+
+        .alert-danger {
+            background: rgba(255, 154, 158, 0.1);
+            border-color: rgba(255, 154, 158, 0.3);
+            color: #991b1b;
+        }
+
+        /* Enhanced Card */
+        .data-card {
+            background: var(--glass-backdrop);
+            backdrop-filter: blur(25px);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-medium);
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .data-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-strong);
+        }
+
+        .card-header {
+            background: var(--primary-gradient) !important;
+            border-bottom: none;
+            padding: 20px 30px;
+            color: white;
+            position: relative;
+        }
+
+        .card-header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+        }
+
+        .card-header h5 {
+            font-size: 1.2rem;
+            margin-bottom: 0;
+            font-weight: 700;
+            color: white;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        /* Enhanced Table */
+        .table-container {
+            max-height: 70vh;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .table {
+            margin-bottom: 0;
+            color: var(--text-primary);
+            font-size: 0.9rem;
+        }
+
+        .table thead th {
+            background: var(--primary-gradient);
+            border: none;
+            color: white;
+            font-weight: 700;
+            padding: 15px 12px;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .table tbody tr {
+            background: var(--glass-light);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--glass-border);
+            transition: all 0.3s ease;
+        }
+
+        .table tbody tr:hover {
+            background: var(--glass-medium);
+            transform: translateX(5px);
+            box-shadow: var(--shadow-soft);
+        }
+
+        .table tbody td {
+            padding: 12px;
+            border: none;
+            color: var(--text-primary);
+            vertical-align: middle;
+        }
+
+        /* Enhanced Badges */
+        .grade-badge {
+            font-size: 0.75rem;
+            padding: 0.4rem 0.8rem;
+            border-radius: var(--radius-full);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            box-shadow: var(--shadow-soft);
+        }
+
+        .badge {
+            border-radius: var(--radius-full);
+            font-weight: 600;
+            font-size: 0.75rem;
+            padding: 0.4rem 0.8rem;
+            box-shadow: var(--shadow-soft);
+        }
+
+        .bg-success {
+            background: var(--success-gradient) !important;
+        }
+
+        .bg-warning {
+            background: var(--warning-gradient) !important;
+            color: var(--text-primary) !important;
+        }
+
+        .bg-danger {
+            background: var(--danger-gradient) !important;
+            color: var(--text-primary) !important;
+        }
+
+        .bg-info {
+            background: var(--info-gradient) !important;
+            color: var(--text-primary) !important;
+        }
+
+        .bg-secondary {
+            background: linear-gradient(135deg, #6b7280, #4b5563) !important;
+        }
+
+        /* Enhanced Buttons */
+        .btn {
+            border-radius: var(--radius-full);
+            font-weight: 600;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-size: 0.9rem;
+            padding: 10px 20px;
+            border: none;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            transition: all 0.6s ease;
+            transform: translate(-50%, -50%);
+        }
+
+        .btn:hover::before {
+            width: 300%;
+            height: 300%;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: var(--shadow-medium);
+        }
+
+        .btn:active {
+            transform: translateY(-1px) scale(1.02);
+        }
+
+        .btn-primary {
+            background: var(--primary-gradient);
+            color: white;
+            box-shadow: var(--shadow-glow);
+        }
+
+        .btn-success {
+            background: var(--success-gradient);
+            color: white;
+            padding: 8px 12px;
+            font-size: 0.8rem;
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #6b7280, #4b5563);
+            color: white;
+        }
+
+        .btn-outline-primary {
+            border: 2px solid #667eea;
+            color: #667eea;
+            background: var(--glass-backdrop);
+        }
+
+        .btn-outline-warning {
+            border: 2px solid #f59e0b;
+            color: #f59e0b;
+            background: var(--glass-backdrop);
+        }
+
+        .btn-outline-secondary {
+            border: 2px solid #6b7280;
+            color: var(--text-primary);
+            background: var(--glass-backdrop);
+        }
+
+        /* Enhanced Form Controls */
+        .form-control, .form-select {
+            background: var(--glass-backdrop);
+            backdrop-filter: blur(10px);
+            border: 2px solid var(--glass-border);
+            border-radius: var(--radius-md);
+            color: var(--text-primary);
+            padding: 12px 16px;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus, .form-select:focus {
+            background: white;
+            border-color: #667eea;
+            box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+            color: var(--text-primary);
+            transform: translateY(-2px);
+        }
+
+        .form-select {
+            font-size: 0.8rem;
+            padding: 8px 12px;
+        }
+
+        .form-label {
+            color: var(--text-primary);
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+        }
+
+        /* Enhanced Total Credits Row */
+        .total-credits-row {
+            background: var(--primary-gradient) !important;
+            color: white;
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+
+        .total-credits-row td {
+            color: white !important;
+        }
+
+        /* Enhanced Footer */
+        .card-footer {
+            background: var(--glass-medium);
+            backdrop-filter: blur(15px);
+            border-top: 1px solid var(--glass-border);
+            padding: 20px 30px;
+        }
+
+        .card-footer small {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .card-footer strong {
+            font-size: 1rem;
+            font-weight: 700;
+        }
+
+        /* Enhanced Empty State */
+        .empty-state {
+            background: var(--glass-medium);
+            backdrop-filter: blur(20px);
+            border-radius: var(--radius-lg);
+            padding: 60px 40px;
+            text-align: center;
+            border: 1px solid var(--glass-border);
+        }
+
+        .empty-icon {
+            width: 80px;
+            height: 80px;
+            background: var(--glass-border);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 2rem;
+            color: var(--text-muted);
+        }
+
+        .empty-state h5 {
+            color: var(--text-primary);
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+
+        .empty-state p {
+            color: var(--text-muted);
+            font-size: 1rem;
+        }
+
+        .tips-card {
+            background: var(--glass-light);
+            backdrop-filter: blur(15px);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-md);
+            padding: 25px;
+            margin-top: 30px;
+        }
+
+        /* Enhanced Scrollbar */
+        .table-container::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .table-container::-webkit-scrollbar-track {
+            background: var(--glass-border);
+            border-radius: 4px;
+        }
+
+        .table-container::-webkit-scrollbar-thumb {
+            background: var(--primary-gradient);
+            border-radius: 4px;
+        }
+
+        .table-container::-webkit-scrollbar-thumb:hover {
+            background: var(--secondary-gradient);
+        }
+
+        /* Action Buttons Section */
+        .action-section {
+            background: var(--glass-light);
+            backdrop-filter: blur(15px);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-lg);
+            padding: 25px;
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            .main-container {
+                padding: 25px;
+                margin: 15px;
+            }
+
+            .student-info {
+                padding: 20px;
+            }
+
+            .stats-box {
+                padding: 10px;
+                margin-bottom: 10px;
+            }
+
+            .main-title {
+                font-size: 1.5rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .main-container {
+                padding: 20px;
+                margin: 10px;
+            }
+
+            .search-card {
+                padding: 20px;
+            }
+
+            .student-info {
+                padding: 15px;
+            }
+
+            .stats-box {
+                padding: 8px;
+            }
+
+            .stats-number {
+                font-size: 1.4rem;
+            }
+
+            .table {
+                font-size: 0.8rem;
+            }
+
+            .table thead th,
+            .table tbody td {
+                padding: 8px 6px;
+            }
+
+            .main-title {
+                font-size: 1.3rem;
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .title-icon {
+                width: 40px;
+                height: 40px;
+                font-size: 1rem;
+            }
+        }
+
+        /* Animation Enhancements */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .fade-in-up {
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        .slide-in-right {
+            animation: slideInRight 0.6s ease-out;
+        }
+
+        /* Code Elements */
+        code {
+            background: rgba(102, 126, 234, 0.1);
+            padding: 0.3rem 0.6rem;
+            border-radius: var(--radius-sm);
+            font-size: 0.85rem;
+            color: #667eea;
+            font-weight: 600;
+        }
+
+        /* Utility Classes */
+        .text-gradient {
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .glass-effect {
+            background: var(--glass-medium);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+        }
+    </style>
+</head>
+<body>
+    <!-- Floating Background Shapes -->
+    <div class="floating-shapes">
+        <div class="shape"></div>
+        <div class="shape"></div>
+        <div class="shape"></div>
+    </div>
+
+    <div class="container-fluid mt-3 mb-4">
+        <div class="main-container fade-in-up">
+            <!-- Enhanced Header -->
+            <div class="header-section" data-aos="fade-down">
+                <div class="main-title">
+                    <div class="title-icon">
+                        <i class="fas fa-database"></i>
+                    </div>
+                    Student Records Management
+                </div>
+                <a href="/" class="btn btn-secondary">
+                    <i class="fas fa-home me-2"></i> Home
+                </a>
+            </div>
+
+            <!-- Enhanced Search Section -->
+            <div class="search-card" data-aos="fade-up" data-aos-delay="100">
+                <h5>
+                    <i class="fas fa-search text-gradient me-2"></i>
+                    Search Student Records
+                </h5>
+                <form method="POST" class="row g-3 align-items-end">
+                    <div class="col-md-6">
+                        <label class="form-label">Registration Number:</label>
+                        <input type="text" 
+                               class="form-control" 
+                               name="search_registration" 
+                               value="{{ registration }}"
+                               placeholder="Enter registration number (e.g., 220101120012)"
+                               style="text-transform: uppercase;">
+                    </div>
+                    <div class="col-md-3">
+                        <button type="submit" class="btn btn-primary w-100">
+                            <i class="fas fa-search me-2"></i> Search Records
+                        </button>
+                    </div>
+                    {% if rows %}
+                    <div class="col-md-3">
+                        <a href="/view_data" class="btn btn-outline-secondary w-100">
+                            <i class="fas fa-refresh me-2"></i> Clear Search
+                        </a>
+                    </div>
+                    {% endif %}
+                </form>
+            </div>
+
+            <!-- Enhanced Messages -->
+            {% if message %}
+            <div class="alert alert-success alert-dismissible fade show" data-aos="fade-in">
+                <i class="fas fa-check-circle me-3"></i>{{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+            {% endif %}
+
+            {% if error %}
+            <div class="alert alert-danger alert-dismissible fade show" data-aos="fade-in">
+                <i class="fas fa-exclamation-triangle me-3"></i>{{ error }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+            {% endif %}
+
+            <!-- Student Records -->
+            {% if rows %}
+            <!-- Enhanced Student Summary -->
+            {% if rows[0] %}
+            <div class="student-info slide-in-right" data-aos="slide-right" data-aos-delay="200">
+                <div class="row align-items-center">
+                    <div class="col-md-2 text-center">
+                        <div class="student-avatar">
+                            <i class="fas fa-user-graduate"></i>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <h4><i class="fas fa-user me-2"></i> {{ rows[0][1] }}</h4>
+                        <p><i class="fas fa-id-card me-2"></i> Registration: {{ rows[0][0] }}</p>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="row g-2">
+                            <div class="col-4">
+                                <div class="stats-box">
+                                    <span class="stats-number">{{ rows|length }}</span>
+                                    <span class="stats-label">Subjects</span>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="stats-box">
+                                    <span class="stats-number">{{ "%.1f"|format(total_credits) }}</span>
+                                    <span class="stats-label">Credits</span>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="stats-box">
+                                    <span class="stats-number">
+                                        {% set failed_count = rows|selectattr('6', 'in', ['F', 'M', 'S'])|list|length %}
+                                        {{ failed_count }}
+                                    </span>
+                                    <span class="stats-label">Backlogs</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Enhanced Data Table -->
+            <div class="data-card" data-aos="zoom-in" data-aos-delay="300">
+                <div class="card-header">
+                    <h5><i class="fas fa-table me-2"></i> Academic Records - {{ registration }}</h5>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-container">
+                        <table class="table table-hover mb-0">
+                            <thead>
+                                <tr>
+                                    <th><i class="fas fa-id-card me-1"></i> Reg No</th>
+                                    <th><i class="fas fa-user me-1"></i> Name</th>
+                                    <th><i class="fas fa-calendar me-1"></i> Semester</th>
+                                    <th><i class="fas fa-code me-1"></i> Code</th>
+                                    <th><i class="fas fa-book me-1"></i> Subject</th>
+                                    <th><i class="fas fa-credit-card me-1"></i> Credits</th>
+                                    <th><i class="fas fa-award me-1"></i> Grade</th>
+                                    <th><i class="fas fa-edit me-1"></i> Update</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for row in rows %}
+                                <tr>
+                                    <td><strong>{{ row[0] }}</strong></td>
+                                    <td>{{ row[1] }}</td>
+                                    <td><span class="badge bg-info">Sem {{ row[2] }}</span></td>
+                                    <td><code>{{ row[3] }}</code></td>
+                                    <td>{{ row[4] }}</td>
+                                    <td><span class="badge bg-secondary">{{ row[5] }}</span></td>
+                                    <td>
+                                        {% set grade = row[6] %}
+                                        {% if grade in ['O', 'E', 'A'] %}
+                                            <span class="badge bg-success grade-badge">{{ grade }}</span>
+                                        {% elif grade in ['B', 'C', 'D'] %}
+                                            <span class="badge bg-warning grade-badge">{{ grade }}</span>
+                                        {% elif grade in ['F', 'M', 'S'] %}
+                                            <span class="badge bg-danger grade-badge">{{ grade }}</span>
+                                        {% else %}
+                                            <span class="badge bg-secondary grade-badge">{{ grade }}</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <div class="d-flex align-items-center gap-2">
+                                            <form method="POST" class="d-flex gap-2 align-items-center">
+                                                <input type="hidden" name="reg_no" value="{{ row[0] }}">
+                                                <input type="hidden" name="subject_code" value="{{ row[3] }}">
+                                                <select name="new_grade" class="form-select form-select-sm" style="width: 80px;" required>
+                                                    <option value="">Select</option>
+                                                    <option value="O">O</option>
+                                                    <option value="E">E</option>
+                                                    <option value="A">A</option>
+                                                    <option value="B">B</option>
+                                                    <option value="C">C</option>
+                                                    <option value="D">D</option>
+                                                    <option value="F">F</option>
+                                                    <option value="S">S</option>
+                                                    <option value="M">M</option>
+                                                    <option value="I">I</option>
+                                                    <option value="R">R</option>
+                                                </select>
+                                                <button type="submit" class="btn btn-success btn-sm" 
+                                                        onclick="return confirm('Update grade for {{ row[4] }}?')"
+                                                        title="Update Grade">
+                                                    <i class="fas fa-save"></i>
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                                
+                                <!-- Enhanced Total Credits Row -->
+                                <tr class="total-credits-row">
+                                    <td colspan="5" class="text-end"><strong><i class="fas fa-calculator me-2"></i>TOTAL CREDITS:</strong></td>
+                                    <td><span class="badge bg-light text-dark fw-bold">{{ "%.1f"|format(total_credits) }}</span></td>
+                                    <td colspan="2"><small><i class="fas fa-info-circle me-1"></i>Cumulative credits earned</small></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <!-- Enhanced Footer Stats -->
+                <div class="card-footer">
+                    <div class="row text-center g-3">
+                        <div class="col-3">
+                            <small class="text-muted d-block">Total Subjects</small>
+                            <strong class="text-gradient fs-5">{{ rows|length }}</strong>
+                        </div>
+                        <div class="col-3">
+                            <small class="text-muted d-block">Total Credits</small>
+                            <strong class="text-success fs-5">{{ "%.1f"|format(total_credits) }}</strong>
+                        </div>
+                        <div class="col-3">
+                            <small class="text-muted d-block">Passed</small>
+                            {% set passed_count = rows|rejectattr('6', 'in', ['F', 'M', 'S'])|list|length %}
+                            <strong class="text-success fs-5">{{ passed_count }}</strong>
+                        </div>
+                        <div class="col-3">
+                            <small class="text-muted d-block">Failed</small>
+                            {% set failed_count = rows|selectattr('6', 'in', ['F', 'M', 'S'])|list|length %}
+                            <strong class="text-danger fs-5">{{ failed_count }}</strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% else %}
+            <!-- Enhanced Empty State -->
+            <div class="empty-state" data-aos="fade-up">
+                <div class="empty-icon">
+                    <i class="fas fa-search"></i>
+                </div>
+                <h5>Search Student Academic Records</h5>
+                <p class="mb-4">Enter a registration number above to view and manage student grades and academic information.</p>
+                
+                <div class="tips-card">
+                    <h6 class="text-gradient mb-3"><i class="fas fa-lightbulb me-2"></i>Quick Guide</h6>
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <ul class="list-unstyled text-start">
+                                <li class="mb-2"><i class="fas fa-arrow-right text-gradient me-2"></i> Enter complete registration number</li>
+                                <li class="mb-2"><i class="fas fa-arrow-right text-gradient me-2"></i> Numbers are auto-converted to uppercase</li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <ul class="list-unstyled text-start">
+                                <li class="mb-2"><i class="fas fa-arrow-right text-gradient me-2"></i> Update grades using dropdown selectors</li>
+                                <li class="mb-2"><i class="fas fa-arrow-right text-gradient me-2"></i> Statistics calculated automatically</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Enhanced Action Section -->
+            <div class="action-section" data-aos="fade-up" data-aos-delay="400">
+                <h6 class="text-gradient mb-3"><i class="fas fa-tools me-2"></i>Quick Actions</h6>
+                <div class="d-flex justify-content-center gap-3 flex-wrap">
+                    <a href="/update_data" class="btn btn-outline-primary">
+                        <i class="fas fa-upload me-2"></i> Upload Data
+                    </a>
+                    <a href="/backlog" class="btn btn-outline-warning">
+                        <i class="fas fa-exclamation-triangle me-2"></i> View Backlogs
+                    </a>
+                    <a href="/admin/panel" class="btn btn-outline-secondary">
+                        <i class="fas fa-cog me-2"></i> Admin Panel
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+    
+    <script>
+        // Initialize AOS with enhanced settings
+        AOS.init({
+            duration: 800,
+            once: true,
+            offset: 50,
+            easing: 'ease-out-cubic'
+        });
+
+        // Auto-convert registration input to uppercase
+        const regInput = document.querySelector('input[name="search_registration"]');
+        if (regInput) {
+            regInput.addEventListener('input', function() {
+                this.value = this.value.toUpperCase();
+                
+                // Visual feedback for valid input
+                if (this.value.length >= 10) {
+                    this.style.borderColor = '#4facfe';
+                    this.style.boxShadow = '0 0 0 0.2rem rgba(79, 172, 254, 0.25)';
+                } else {
+                    this.style.borderColor = '';
+                    this.style.boxShadow = '';
+                }
+            });
+        }
+
+        // Enhanced table row hover effects
+        document.querySelectorAll('tbody tr:not(.total-credits-row)').forEach(row => {
+            row.addEventListener('mouseenter', function() {
+                this.style.background = 'rgba(102, 126, 234, 0.1)';
+                this.style.transform = 'translateX(5px)';
+            });
+            row.addEventListener('mouseleave', function() {
+                this.style.background = '';
+                this.style.transform = '';
+            });
+        });
+
+        // Auto-focus search input on page load
+        window.addEventListener('load', function() {
+            if (regInput && !regInput.value) {
+                setTimeout(() => regInput.focus(), 500);
+            }
+        });
+
+        // Enhanced visual feedback for grade changes
+        document.querySelectorAll('select[name="new_grade"]').forEach(select => {
+            select.addEventListener('change', function() {
+                if (this.value) {
+                    this.style.borderColor = '#4facfe';
+                    this.style.backgroundColor = 'rgba(79, 172, 254, 0.1)';
+                    this.style.transform = 'scale(1.05)';
+                } else {
+                    this.style.borderColor = '';
+                    this.style.backgroundColor = '';
+                    this.style.transform = '';
+                }
+            });
+        });
+
+        // Add loading state to search button
+        const searchForm = document.querySelector('form');
+        const searchButton = document.querySelector('button[type="submit"]');
+        
+        if (searchForm && searchButton) {
+            searchForm.addEventListener('submit', function() {
+                const originalText = searchButton.innerHTML;
+                searchButton.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i> Searching...';
+                searchButton.disabled = true;
+                
+                // Re-enable after 3 seconds as fallback
+                setTimeout(() => {
+                    searchButton.innerHTML = originalText;
+                    searchButton.disabled = false;
+                }, 3000);
+            });
+        }
+
+        // Enhanced update button effects
+        document.querySelectorAll('.btn-success').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                // Add ripple effect
+                const ripple = document.createElement('span');
+                ripple.style.cssText = `
+                    position: absolute;
+                    border-radius: 50%;
+                    background: rgba(255, 255, 255, 0.6);
+                    transform: scale(0);
+                    animation: ripple 0.6s linear;
+                    pointer-events: none;
+                `;
+                
+                const rect = this.getBoundingClientRect();
+                const size = Math.max(rect.width, rect.height);
+                ripple.style.width = ripple.style.height = size + 'px';
+                ripple.style.left = (e.clientX - rect.left - size / 2) + 'px';
+                ripple.style.top = (e.clientY - rect.top - size / 2) + 'px';
+                
+                this.style.position = 'relative';
+                this.appendChild(ripple);
+                
+                setTimeout(() => ripple.remove(), 600);
+            });
+        });
+
+        // Add ripple animation CSS
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes ripple {
+                to { transform: scale(4); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Smooth scroll for action buttons
+        document.querySelectorAll('a[href^="/"]').forEach(link => {
+            link.addEventListener('click', function(e) {
+                // Add loading state for navigation
+                this.style.transform = 'scale(0.95)';
+                setTimeout(() => {
+                    this.style.transform = '';
+                }, 150);
+            });
+        });
+
+        console.log('✨ Enhanced CUTM Data View loaded successfully');
+    </script>
+</body>
+</html>

@@ -1,0 +1,1395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Multi-Semester Result | CUTM</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <!-- AOS Animation -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" rel="stylesheet">
+  <style>
+    :root {
+      --cutm-blue: #0a2a6c;
+      --cutm-light-blue: #1d3a94;
+      --cutm-bg: #f8f9fa;
+      --white: #ffffff;
+      --shadow-light: 0 2px 6px rgba(10, 42, 108, 0.08);
+      --shadow-medium: 0 4px 12px rgba(10, 42, 108, 0.12);
+      --shadow-heavy: 0 8px 25px rgba(10, 42, 108, 0.15);
+      --gradient-cutm: linear-gradient(135deg, #0a2a6c 0%, #1d3a94 100%);
+      --text-dark: #333;
+      --border-color: #ddd;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: var(--cutm-bg);
+      margin: 0;
+      padding: 15px;
+      overflow-x: hidden;
+      animation: fadeInBody 1s ease-out;
+    }
+    
+    @keyframes fadeInBody {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    
+    /* Animated background */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: 
+        radial-gradient(circle at 25% 25%, rgba(10, 42, 108, 0.03) 0%, transparent 50%),
+        radial-gradient(circle at 75% 25%, rgba(29, 58, 148, 0.03) 0%, transparent 50%),
+        radial-gradient(circle at 25% 75%, rgba(10, 42, 108, 0.02) 0%, transparent 50%),
+        radial-gradient(circle at 75% 75%, rgba(29, 58, 148, 0.02) 0%, transparent 50%);
+      z-index: -1;
+      animation: backgroundFloat 20s ease-in-out infinite;
+    }
+    
+    @keyframes backgroundFloat {
+      0%, 100% { opacity: 0.5; transform: scale(1); }
+      50% { opacity: 0.8; transform: scale(1.05); }
+    }
+    
+    /* Professional Loading Overlay */
+    .loading-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: var(--gradient-cutm);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 99999;
+      transition: all 0.8s ease;
+    }
+    
+    .loading-spinner {
+      width: 80px;
+      height: 80px;
+      border: 4px solid rgba(255, 255, 255, 0.2);
+      border-top: 4px solid white;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin-bottom: 20px;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
+    .loading-text {
+      color: white;
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin-bottom: 10px;
+      animation: pulse 2s ease-in-out infinite;
+    }
+    
+    .loading-subtitle {
+      color: rgba(255, 255, 255, 0.8);
+      font-size: 0.9rem;
+    }
+    
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.7; }
+    }
+    
+    /* Page title with CUTM logo */
+    .page-title {
+      text-align: center;
+      font-size: 20px;
+      font-weight: bold;
+      color: var(--cutm-blue);
+      margin-bottom: 40px;
+      line-height: 1.4;
+      position: relative;
+    }
+    
+    .cutm-logo {
+      display: block;
+      margin: 0 auto 20px auto;
+      border-radius: 50%;
+      border: 3px solid var(--cutm-blue);
+      box-shadow: var(--shadow-medium);
+      transition: all 0.3s ease;
+      animation: logoEntrance 1.2s ease-out;
+    }
+    
+    .cutm-logo:hover {
+      transform: scale(1.05) rotate(5deg);
+      box-shadow: var(--shadow-heavy);
+    }
+    
+    @keyframes logoEntrance {
+      from { 
+        opacity: 0; 
+        transform: scale(0.8) rotate(-10deg) translateY(-30px); 
+      }
+      to { 
+        opacity: 1; 
+        transform: scale(1) rotate(0deg) translateY(0); 
+      }
+    }
+    
+    .university-name {
+      font-size: 1.4rem;
+      font-weight: bold;
+      color: var(--cutm-blue);
+      margin-bottom: 8px;
+      animation: slideInFromLeft 0.8s ease-out 0.3s both;
+    }
+    
+    .school-name {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--cutm-light-blue);
+      margin-bottom: 5px;
+      animation: slideInFromRight 0.8s ease-out 0.5s both;
+    }
+    
+    .campus-name {
+      font-size: 1rem;
+      font-weight: 500;
+      color: #666;
+      animation: slideInFromBottom 0.8s ease-out 0.7s both;
+    }
+    
+    @keyframes slideInFromLeft {
+      from { opacity: 0; transform: translateX(-50px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+    
+    @keyframes slideInFromRight {
+      from { opacity: 0; transform: translateX(50px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+    
+    @keyframes slideInFromBottom {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    /* Blue separator line */
+    .blue-separator {
+      height: 4px;
+      background: var(--gradient-cutm);
+      margin: 20px auto;
+      border-radius: 2px;
+      max-width: 1000px;
+      animation: separatorGrow 0.8s ease-out 1.0s both;
+    }
+    
+    @keyframes separatorGrow {
+      from { width: 0; opacity: 0; }
+      to { width: 100%; opacity: 1; }
+    }
+    
+    /* Back to Home Button */
+    .back-btn {
+      background: var(--gradient-cutm);
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-weight: 600;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      margin-bottom: 20px;
+      transition: all 0.3s ease;
+      box-shadow: var(--shadow-light);
+      animation: fadeInLeft 0.6s ease-out 0.8s both;
+    }
+    
+    .back-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-medium);
+      color: white;
+      text-decoration: none;
+    }
+    
+    .back-btn i {
+      margin-right: 8px;
+    }
+    
+    @keyframes fadeInLeft {
+      from { opacity: 0; transform: translateX(-30px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+    
+    /* Student info card */
+    .student-info {
+      margin: 0 auto 20px auto;
+      max-width: 1000px;
+      background: var(--white);
+      padding: 20px 25px;
+      border-radius: 12px;
+      box-shadow: var(--shadow-light);
+      transition: all 0.3s ease;
+      animation: cardSlideUp 0.8s ease-out 0.9s both;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .student-info::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: var(--gradient-cutm);
+    }
+    
+    .student-info:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-medium);
+    }
+    
+    @keyframes cardSlideUp {
+      from { 
+        opacity: 0; 
+        transform: translateY(30px) scale(0.95); 
+      }
+      to { 
+        opacity: 1; 
+        transform: translateY(0) scale(1); 
+      }
+    }
+    
+    .student-info .col-12,
+    .student-info .col-md-6 {
+      padding: 8px 0;
+      font-size: 15px;
+      transition: all 0.3s ease;
+      animation: fadeInUp 0.6s ease-out both;
+    }
+    
+    .student-info .col-md-6:nth-child(1) { animation-delay: 1.1s; }
+    .student-info .col-md-6:nth-child(2) { animation-delay: 1.2s; }
+    .student-info .col-md-6:nth-child(3) { animation-delay: 1.3s; }
+    .student-info .col-md-6:nth-child(4) { animation-delay: 1.4s; }
+    
+    @keyframes fadeInUp {
+      from { 
+        opacity: 0; 
+        transform: translateY(20px); 
+      }
+      to { 
+        opacity: 1; 
+        transform: translateY(0); 
+      }
+    }
+    
+    .student-info b {
+      color: var(--cutm-blue);
+      font-weight: 600;
+    }
+    
+    /* Enhanced table */
+    .desktop-table {
+      max-width: 1000px;
+      margin: 0 auto;
+      background: var(--white);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: var(--shadow-light);
+      transition: all 0.3s ease;
+      animation: tableSlideUp 0.8s ease-out 1.7s both;
+    }
+    
+    .desktop-table:hover {
+      box-shadow: var(--shadow-medium);
+    }
+    
+    @keyframes tableSlideUp {
+      from { 
+        opacity: 0; 
+        transform: translateY(40px) scale(0.98); 
+      }
+      to { 
+        opacity: 1; 
+        transform: translateY(0) scale(1); 
+      }
+    }
+    
+    .desktop-table table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 0;
+    }
+    
+    .desktop-table th,
+    .desktop-table td {
+      border: 1px solid var(--border-color);
+      padding: 12px;
+      text-align: center;
+      font-size: 14px;
+      transition: all 0.3s ease;
+    }
+    
+    .desktop-table th {
+      background: var(--gradient-cutm);
+      color: white;
+      font-weight: 600;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .desktop-table th::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      transition: left 0.6s;
+    }
+    
+    .desktop-table th:hover::before {
+      left: 100%;
+    }
+    
+    .desktop-table td {
+      font-weight: 500;
+      color: var(--text-dark);
+      background: var(--white);
+      transition: all 0.3s ease;
+    }
+    
+    .desktop-table tbody tr {
+      animation: rowFadeIn 0.5s ease-out both;
+    }
+    
+    .desktop-table tbody tr:nth-child(1) { animation-delay: 1.9s; }
+    .desktop-table tbody tr:nth-child(2) { animation-delay: 2.0s; }
+    .desktop-table tbody tr:nth-child(3) { animation-delay: 2.1s; }
+    .desktop-table tbody tr:nth-child(4) { animation-delay: 2.2s; }
+    .desktop-table tbody tr:nth-child(5) { animation-delay: 2.3s; }
+    .desktop-table tbody tr:nth-child(6) { animation-delay: 2.4s; }
+    .desktop-table tbody tr:nth-child(7) { animation-delay: 2.5s; }
+    .desktop-table tbody tr:nth-child(8) { animation-delay: 2.6s; }
+    .desktop-table tbody tr:nth-child(9) { animation-delay: 2.7s; }
+    .desktop-table tbody tr:nth-child(10) { animation-delay: 2.8s; }
+    .desktop-table tbody tr:nth-child(n+11) { animation-delay: 2.9s; }
+    
+    @keyframes rowFadeIn {
+      from { 
+        opacity: 0; 
+        transform: translateX(-20px); 
+      }
+      to { 
+        opacity: 1; 
+        transform: translateX(0); 
+      }
+    }
+    
+    .desktop-table tbody tr:hover {
+      background: rgba(10, 42, 108, 0.05);
+      transform: scale(1.01);
+    }
+    
+    .desktop-table tbody tr:hover td {
+      background: rgba(10, 42, 108, 0.05);
+    }
+    
+    /* Grade highlighting */
+    .desktop-table td:last-child {
+      font-weight: 600;
+      position: relative;
+    }
+    
+    .grade-A, .grade-A+, .grade-O {
+      color: #10b981;
+      font-weight: bold;
+    }
+    
+    .grade-B, .grade-B+ {
+      color: #3b82f6;
+      font-weight: bold;
+    }
+    
+    .grade-C, .grade-E {
+      color: #f59e0b;
+      font-weight: bold;
+    }
+    
+    .grade-F, .grade-M, .grade-S, .grade-I, .grade-R {
+      color: #ef4444;
+      font-weight: bold;
+    }
+    
+    /* Additional Information Section */
+    .additional-info {
+      margin: 30px auto 20px auto;
+      max-width: 1000px;
+      background: var(--white);
+      padding: 15px 25px;
+      border-radius: 12px;
+      box-shadow: var(--shadow-light);
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+      animation: cardSlideUp 0.8s ease-out 2.3s both;
+    }
+    
+    .additional-info::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: var(--gradient-cutm);
+    }
+    
+    .additional-info:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-medium);
+    }
+    
+    .additional-info .info-row {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 20px;
+      align-items: center;
+      text-align: center;
+    }
+    
+    .additional-info .info-item {
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--text-dark);
+      animation: fadeInUp 0.6s ease-out both;
+    }
+    
+    .additional-info .info-item:nth-child(1) { animation-delay: 2.5s; }
+    .additional-info .info-item:nth-child(2) { animation-delay: 2.6s; }
+    .additional-info .info-item:nth-child(3) { animation-delay: 2.7s; }
+    .additional-info .info-item:nth-child(4) { animation-delay: 2.8s; }
+    .additional-info .info-item:nth-child(5) { animation-delay: 2.9s; }
+    
+    .additional-info b {
+      color: var(--cutm-blue);
+      font-weight: 600;
+    }
+    
+    /* Download Section Styles */
+    .download-section {
+      margin: 40px auto;
+      max-width: 1000px;
+      text-align: center;
+      animation: fadeInUp 0.8s ease-out 3.1s both;
+    }
+    
+    .download-btn {
+      background: var(--gradient-cutm);
+      color: white;
+      border: none;
+      padding: 18px 35px;
+      border-radius: 12px;
+      font-weight: 600;
+      box-shadow: var(--shadow-medium);
+      transition: all 0.3s ease;
+      font-size: 16px;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .download-btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      transition: left 0.6s;
+    }
+    
+    .download-btn:hover::before {
+      left: 100%;
+    }
+    
+    .download-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-heavy);
+      color: white;
+    }
+    
+    .download-btn:active {
+      transform: translateY(-1px);
+    }
+    
+    .download-btn i {
+      margin-right: 10px;
+      font-size: 18px;
+    }
+    
+    /* Responsive Table Scroll */
+    .table-responsive {
+      overflow-x: auto;
+    }
+    
+    /* Floating elements */
+    .floating-element {
+      position: fixed;
+      opacity: 0.05;
+      animation: float 15s ease-in-out infinite;
+      color: var(--cutm-blue);
+      font-size: 2rem;
+      z-index: -1;
+    }
+    
+    .floating-element:nth-child(1) {
+      top: 10%;
+      left: 5%;
+      animation-delay: -2s;
+    }
+    
+    .floating-element:nth-child(2) {
+      top: 20%;
+      right: 10%;
+      animation-delay: -8s;
+    }
+    
+    .floating-element:nth-child(3) {
+      bottom: 30%;
+      left: 15%;
+      animation-delay: -15s;
+    }
+    
+    .floating-element:nth-child(4) {
+      bottom: 10%;
+      right: 20%;
+      animation-delay: -5s;
+    }
+    
+    @keyframes float {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      25% { transform: translateY(-20px) rotate(5deg); }
+      50% { transform: translateY(-10px) rotate(-5deg); }
+      75% { transform: translateY(-30px) rotate(3deg); }
+    }
+    
+    /* Message animations */
+    @keyframes slideInRight {
+      from { transform: translateX(100%); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+    
+    @keyframes slideOutRight {
+      from { transform: translateX(0); opacity: 1; }
+      to { transform: translateX(100%); opacity: 0; }
+    }
+    
+    /* Mobile Optimizations */
+    @media (max-width: 768px) {
+      body {
+        padding: 10px;
+      }
+      
+      .page-title {
+        font-size: 18px;
+      }
+      
+      .cutm-logo {
+        width: 80px;
+        height: 80px;
+      }
+      
+      .university-name {
+        font-size: 1.2rem;
+      }
+      
+      .school-name {
+        font-size: 1rem;
+      }
+      
+      .campus-name {
+        font-size: 0.9rem;
+      }
+      
+      .student-info {
+        padding: 15px 18px;
+      }
+      
+      .student-info .col-12 {
+        font-size: 14px;
+        padding: 6px 0;
+      }
+      
+      .additional-info {
+        padding: 15px 18px;
+      }
+      
+      .additional-info .info-row {
+        grid-template-columns: 1fr;
+        gap: 10px;
+        text-align: left;
+      }
+      
+      .desktop-table th,
+      .desktop-table td {
+        font-size: 13px;
+        padding: 10px 8px;
+      }
+      
+      .download-btn {
+        padding: 15px 25px;
+        font-size: 15px;
+        width: 90%;
+        max-width: 300px;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      .university-name {
+        font-size: 1.1rem;
+      }
+      
+      .student-info {
+        padding: 12px 15px;
+      }
+      
+      .additional-info {
+        padding: 12px 15px;
+      }
+      
+      .desktop-table th,
+      .desktop-table td {
+        font-size: 12px;
+        padding: 8px 6px;
+      }
+      
+      .download-btn {
+        padding: 12px 20px;
+        font-size: 14px;
+      }
+    }
+    
+    /* Enhanced Print styles for perfect PDF output */
+    @media print {
+      @page {
+        margin: 10mm;
+        size: A4;
+      }
+      
+      body {
+        background: white !important;
+        font-family: 'Times New Roman', serif !important;
+        font-size: 11pt !important;
+        line-height: 1.3 !important;
+        color: black !important;
+        margin: 0 !important;
+        padding: 0 !important;
+      }
+      
+      body::before {
+        display: none !important;
+      }
+      
+      .page-title {
+        text-align: center;
+        margin-bottom: 20px;
+        page-break-after: avoid;
+      }
+      
+      .cutm-logo {
+        width: 60px !important;
+        height: 60px !important;
+        margin-bottom: 10px;
+        border: 2px solid #0a2a6c !important;
+      }
+      
+      .university-name {
+        font-size: 14pt !important;
+        font-weight: bold !important;
+        margin-bottom: 5px;
+        color: #0a2a6c !important;
+      }
+      
+      .school-name {
+        font-size: 12pt !important;
+        margin-bottom: 3px;
+        color: #1d3a94 !important;
+      }
+      
+      .campus-name {
+        font-size: 10pt !important;
+        color: #666 !important;
+      }
+      
+      .blue-separator {
+        height: 3px !important;
+        background: #0a2a6c !important;
+        print-color-adjust: exact !important;
+        -webkit-print-color-adjust: exact !important;
+        margin: 15px auto !important;
+      }
+      
+      .student-info {
+        background: white !important;
+        border: 1px solid #ddd !important;
+        box-shadow: none !important;
+        padding: 10px !important;
+        margin-bottom: 15px !important;
+        page-break-inside: avoid;
+      }
+      
+      .student-info::before {
+        background: #0a2a6c !important;
+        print-color-adjust: exact !important;
+        -webkit-print-color-adjust: exact !important;
+      }
+      
+      .student-info .row {
+        display: block !important;
+      }
+      
+      .student-info .col-md-6 {
+        display: inline-block !important;
+        width: 48% !important;
+        padding: 3px 0 !important;
+        font-size: 9pt !important;
+        vertical-align: top;
+      }
+      
+      .desktop-table {
+        background: white !important;
+        box-shadow: none !important;
+        border: none !important;
+        page-break-inside: avoid;
+        margin: 15px auto !important;
+      }
+      
+      .desktop-table table {
+        width: 100% !important;
+        border-collapse: collapse !important;
+      }
+      
+      .desktop-table th {
+        background: #0a2a6c !important;
+        color: white !important;
+        print-color-adjust: exact !important;
+        -webkit-print-color-adjust: exact !important;
+        font-weight: bold !important;
+        padding: 6px !important;
+        border: 1px solid #333 !important;
+        font-size: 9pt !important;
+      }
+      
+      .desktop-table td {
+        padding: 6px !important;
+        border: 1px solid #333 !important;
+        background: white !important;
+        font-size: 9pt !important;
+      }
+      
+      .additional-info {
+        background: white !important;
+        box-shadow: none !important;
+        border: 1px solid #ddd !important;
+        padding: 10px !important;
+        margin-top: 15px !important;
+        page-break-inside: avoid;
+      }
+      
+      .additional-info::before {
+        background: #0a2a6c !important;
+        print-color-adjust: exact !important;
+        -webkit-print-color-adjust: exact !important;
+      }
+      
+      .additional-info .info-row {
+        display: block !important;
+        text-align: center;
+      }
+      
+      .additional-info .info-item {
+        display: inline-block !important;
+        width: 19% !important;
+        font-size: 9pt !important;
+        margin: 0 1px !important;
+        vertical-align: top;
+      }
+      
+      /* Hide elements not needed in PDF */
+      .floating-element,
+      .download-section,
+      .loading-overlay,
+      .back-btn {
+        display: none !important;
+      }
+      
+      /* Grade colors for print */
+      .grade-A, .grade-O {
+        color: #000000 !important;
+        print-color-adjust: exact !important;
+      }
+      
+      .grade-B {
+        color: #000000 !important;
+        print-color-adjust: exact !important;
+      }
+      
+      .grade-E {
+        color: #000000 !important;
+        print-color-adjust: exact !important;
+      }
+      
+      .grade-F {
+        color: #000000 !important;
+        print-color-adjust: exact !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Professional Loading Overlay -->
+  <div class="loading-overlay" id="loadingOverlay">
+    <div class="loading-spinner"></div>
+    <div class="loading-text" id="loadingText">Loading Multi-Semester Results...</div>
+    <div class="loading-subtitle" id="loadingSubtitle">Please wait while we fetch your data</div>
+  </div>
+
+  <!-- Floating Background Elements -->
+  <div class="floating-element"><i class="fas fa-graduation-cap"></i></div>
+  <div class="floating-element"><i class="fas fa-certificate"></i></div>
+  <div class="floating-element"><i class="fas fa-medal"></i></div>
+  <div class="floating-element"><i class="fas fa-star"></i></div>
+
+  <!-- Back to Home Button -->
+  <div class="container-fluid">
+    <a href="{{ url_for('home') }}" class="back-btn">
+      <i class="fas fa-arrow-left"></i> Back to Search
+    </a>
+  </div>
+
+  <!-- Page Title with Enhanced CUTM Branding -->
+  <div class="page-title">
+    <img 
+      src="https://tse1.mm.bing.net/th/id/OIP.yR5DUnUlOBL5eCaPQ9HFgwHaHZ?rs=1&pid=ImgDetMain&o=7&rm=3"   
+      alt="CUTM Logo"   
+      height="100"   
+      width="100" 
+      class="cutm-logo"
+      crossorigin="anonymous"
+    />
+    <div class="university-name">Centurion University of Technology and Management</div>
+    <div class="school-name">School Of Engineering & Technology, Paralakhemundi</div>
+    <div class="campus-name">Paralakhemundi Campus</div>
+  </div>
+
+  <!-- Blue separator line -->
+  <div class="blue-separator"></div>
+  
+  <!-- Wrap everything in one container for PDF export -->
+  <div id="result-content">
+    <!-- Student Info with Enhanced Animation -->
+    <div class="student-info" data-aos="fade-up" data-aos-duration="800">
+      <div class="row">
+        <div class="col-md-6 col-12" data-aos="fade-right" data-aos-delay="100">
+          <b>Registration Number:</b> {{ result[0].Reg_No if result and result[0] else registration if registration else 'N/A' }}
+        </div>
+        <div class="col-md-6 col-12" data-aos="fade-left" data-aos-delay="200">
+          <b>Name:</b> {{ result[0].Name if result and result[0] else name if name else 'N/A' }}
+        </div>
+        <div class="col-md-6 col-12" data-aos="fade-right" data-aos-delay="300">
+          <b>Semesters:</b> {{ semesters_display if semesters_display else 'Multiple' }}
+        </div>
+        <div class="col-md-6 col-12" data-aos="fade-left" data-aos-delay="400">
+          <b>Total Subjects:</b> {{ count if count else result|length }}
+        </div>
+      </div>
+    </div>
+    
+    <!-- Subject Table with Row Animations - UPDATED to include Semester column -->
+    <div class="desktop-table table-responsive" data-aos="fade-up" data-aos-duration="800" data-aos-delay="700">
+      <table>
+        <thead>
+          <tr>
+            <th data-aos="fade-down" data-aos-delay="800">Semester</th>
+            <th data-aos="fade-down" data-aos-delay="850">Subject Code</th>
+            <th data-aos="fade-down" data-aos-delay="900">Subject Name</th>
+            <th data-aos="fade-down" data-aos-delay="950">Credits</th>
+            <th data-aos="fade-down" data-aos-delay="1000">Grade</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for row in result %}
+          <tr data-aos="fade-right" data-aos-delay="{{ 1200 + loop.index0 * 50 }}">
+            <td><b>{{ row.Sem }}</b></td>
+            <td>{{ row.Subject_Code }}</td>
+            <td style="font-weight: 600;">{{ row.Subject_Name }}</td>
+            <td>{{ row.Credits }}</td>
+            <td class="grade-{{ row.Grade }}">{{ row.Grade }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Additional Information Section - FIXED for multi-semester -->
+    <div class="additional-info" data-aos="fade-up" data-aos-duration="800" data-aos-delay="800">
+      <div class="info-row">
+        <div class="info-item">
+          <b>Total Credits:</b> <span id="totalCredits">0</span>
+        </div>
+        <div class="info-item">
+          <b>Credits Cleared:</b> <span id="creditsCleared">0</span>
+        </div>
+        <div class="info-item">
+          <b>Overall SGPA:</b> N/A
+        </div>
+        <div class="info-item">
+          <b>CGPA:</b> {{ '%.2f' % cgpa if cgpa else 'N/A' }}
+        </div>
+        <div class="info-item">
+          <b>Date:</b> <span id="currentDate">10-Sep-2025</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Download Result Section -->
+  <div class="download-section">
+    <button id="downloadPdfBtn" onclick="downloadPDF()" class="btn btn-lg download-btn">
+      <i class="fas fa-file-pdf"></i>
+      Download Multi-Semester Result as PDF
+    </button>
+  </div>
+  
+  <!-- Scripts -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+  <script>
+    // Initialize AOS
+    AOS.init({
+      duration: 800,
+      once: true,
+      offset: 50
+    });
+
+    // UPDATED Function to calculate credits for multi-semester data
+    function calculateCredits() {
+      const failedGrades = ['S', 'F', 'M', 'I', 'R'];
+      let totalCredits = 0;
+      let creditsCleared = 0;
+      
+      // Get all table rows (excluding header)
+      const tableRows = document.querySelectorAll('.desktop-table tbody tr');
+      
+      console.log('Found table rows:', tableRows.length);
+      
+      tableRows.forEach((row, index) => {
+        const cells = row.querySelectorAll('td');
+        if (cells.length >= 5) { // Now we have 5 columns including semester
+          const creditsText = cells[3].textContent.trim();
+          let credits = 0;
+          
+          // Handle credits like "4+2" or single values
+          if (creditsText.includes('+')) {
+            const parts = creditsText.split('+');
+            credits = parts.reduce((sum, part) => sum + (parseFloat(part.trim()) || 0), 0);
+          } else {
+            credits = parseFloat(creditsText) || 0;
+          }
+          
+          const grade = cells[4].textContent.trim().toUpperCase();
+          
+          console.log(`Row ${index}: Semester=${cells[0].textContent}, Credits=${credits}, Grade=${grade}`);
+          
+          // Total Credits: Sum of ALL subject credits
+          totalCredits += credits;
+          
+          // Credits Cleared: Sum of credits ONLY for subjects with passing grades
+          if (!failedGrades.includes(grade)) {
+            creditsCleared += credits;
+          }
+        }
+      });
+      
+      console.log('Before rounding - Total Credits:', totalCredits, 'Credits Cleared:', creditsCleared);
+      
+      // Force whole numbers (no decimals)
+      totalCredits = Math.round(totalCredits);
+      creditsCleared = Math.round(creditsCleared);
+      
+      console.log('After rounding - Total Credits:', totalCredits, 'Credits Cleared:', creditsCleared);
+      
+      // Update the display
+      document.getElementById('totalCredits').textContent = totalCredits;
+      document.getElementById('creditsCleared').textContent = creditsCleared;
+    }
+
+    // Function to show current date - FIXED
+    function showCurrentDate() {
+      const now = new Date();
+      const day = String(now.getDate()).padStart(2, '0');
+      const monthName = new Intl.DateTimeFormat('en-GB', { month: 'short' }).format(now);
+      const year = now.getFullYear();
+      
+      const formattedDate = `${day}-${monthName}-${year}`;
+      console.log('Setting date to:', formattedDate); // Debug log
+      
+      const dateElement = document.getElementById('currentDate');
+      if (dateElement) {
+        dateElement.textContent = formattedDate;
+        console.log('Date element found and updated'); // Debug log
+      } else {
+        console.log('Date element not found!'); // Debug log
+      }
+    }
+
+    // UPDATED Professional loading sequence for multi-semester
+    window.addEventListener('load', function() {
+      const loadingText = document.getElementById('loadingText');
+      const loadingSubtitle = document.getElementById('loadingSubtitle');
+      
+      const loadingMessages = [
+        { text: 'Loading Multi-Semester Results...', subtitle: 'Connecting to CUTM servers' },
+        { text: 'Fetching Data...', subtitle: 'Retrieving multi-semester information' },
+        { text: 'Processing Grades...', subtitle: 'Calculating overall SGPA and CGPA' },
+        { text: 'Organizing Data...', subtitle: 'Sorting by semester and subject' },
+        { text: 'Preparing Display...', subtitle: 'Formatting comprehensive result data' },
+        { text: 'Almost Ready...', subtitle: 'Finalizing multi-semester presentation' }
+      ];
+      
+      let messageIndex = 0;
+      
+      const updateMessages = () => {
+        if (messageIndex < loadingMessages.length) {
+          loadingText.textContent = loadingMessages[messageIndex].text;
+          loadingSubtitle.textContent = loadingMessages[messageIndex].subtitle;
+          messageIndex++;
+        }
+      };
+      
+      const messageInterval = setInterval(updateMessages, 600);
+      
+      setTimeout(() => {
+        clearInterval(messageInterval);
+        const overlay = document.getElementById('loadingOverlay');
+        
+        overlay.style.opacity = '0';
+        overlay.style.transform = 'scale(0.95)';
+        
+        setTimeout(() => {
+          overlay.style.display = 'none';
+          triggerEntranceAnimations();
+          
+          // FIXED: Always call these functions
+          console.log('Calling calculateCredits and showCurrentDate...'); // Debug log
+          calculateCredits();
+          showCurrentDate();
+          
+          // Wait for table to be fully rendered, then calculate credits again if needed
+          const waitForTable = () => {
+            const tableRows = document.querySelectorAll('.desktop-table tbody tr');
+            console.log('Checking for table rows:', tableRows.length);
+            
+            if (tableRows.length > 0) {
+              console.log('Table found! Calculating credits again...');
+              calculateCredits();
+              showCurrentDate();
+            }
+          };
+          
+          setTimeout(waitForTable, 1000);
+        }, 500);
+      }, 4000);
+    });
+    
+    // Also call the functions immediately when DOM is ready
+    document.addEventListener('DOMContentLoaded', function() {
+      setTimeout(() => {
+        console.log('DOM ready - calling functions...'); // Debug log
+        calculateCredits();
+        showCurrentDate();
+      }, 1000);
+    });
+    
+    // Trigger entrance animations
+    function triggerEntranceAnimations() {
+      AOS.refresh();
+      setTimeout(() => {
+        addTableInteractions();
+      }, 2000);
+    }
+    
+    // Add interactive effects to table
+    function addTableInteractions() {
+      const tableRows = document.querySelectorAll('.desktop-table tbody tr');
+      
+      tableRows.forEach((row, index) => {
+        row.addEventListener('mouseenter', function() {
+          this.style.transform = 'scale(1.02)';
+          this.style.zIndex = '10';
+        });
+        
+        row.addEventListener('mouseleave', function() {
+          this.style.transform = 'scale(1)';
+          this.style.zIndex = '1';
+        });
+      });
+    }
+    
+    // Add smooth scrolling
+    document.addEventListener('DOMContentLoaded', function() {
+      setTimeout(() => {
+        window.scrollTo({
+          top: 0,
+          behavior: 'smooth'
+        });
+      }, 4000);
+    });
+    
+    // Add grade color coding after page load
+    document.addEventListener('DOMContentLoaded', function() {
+      setTimeout(() => {
+        const gradeCells = document.querySelectorAll('td:last-child');
+        gradeCells.forEach(cell => {
+          const grade = cell.textContent.trim();
+          if (grade.includes('A') || grade.includes('O')) {
+            cell.classList.add('grade-A');
+          } else if (grade.includes('B')) {
+            cell.classList.add('grade-B');
+          } else if (grade.includes('C') || grade.includes('E')) {
+            cell.classList.add('grade-E');
+          } else if (grade.includes('F') || grade.includes('M') || grade.includes('S') || grade.includes('I') || grade.includes('R')) {
+            cell.classList.add('grade-F');
+          }
+        });
+      }, 3000);
+    });
+    
+    // Add parallax effect to floating elements
+    window.addEventListener('scroll', function() {
+      const scrolled = window.pageYOffset;
+      
+      document.querySelectorAll('.floating-element').forEach((element, index) => {
+        const speed = 0.5 + (index * 0.1);
+        element.style.transform = `translateY(${scrolled * speed}px)`;
+      });
+    });
+    
+    // Add entrance animation for logo
+    setTimeout(() => {
+      const logo = document.querySelector('.cutm-logo');
+      if (logo) {
+        logo.addEventListener('click', function() {
+          this.style.animation = 'logoEntrance 0.6s ease-out';
+          setTimeout(() => {
+            this.style.animation = '';
+          }, 600);
+        });
+      }
+    }, 4000);
+    
+    // Enhanced Download as PDF functionality for multi-semester
+    function downloadPDF() {
+      try {
+        if (!window.print) {
+          showDownloadMessage('Print not supported in this browser. Please use Chrome, Firefox, or Safari.', 'error');
+          return;
+        }
+
+        const downloadBtn = document.getElementById('downloadPdfBtn');
+        
+        // Set document title for PDF filename - for multi-semester
+        const regNoElement = document.querySelector('.student-info .col-md-6');
+        let regNo = 'CUTM_Result';
+        
+        if (regNoElement) {
+          const regNoText = regNoElement.textContent.trim();
+          const match = regNoText.match(/Registration Number:\s*(.+)/);
+          if (match && match[1] && match[1] !== 'N/A') {
+            regNo = match[1].trim();
+          }
+        }
+        
+        document.title = `CUTM_Multi_Semester_Result_${regNo.replace(/\s+/g, '_')}`;
+        
+        // Disable button to prevent multiple clicks
+        downloadBtn.disabled = true;
+        downloadBtn.style.opacity = '0.6';
+        downloadBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Preparing Multi-Semester PDF...';
+        
+        showDownloadMessage('Preparing multi-semester PDF for download...', 'info');
+        
+        // Add enhanced print CSS for better PDF output
+        const printCSS = `
+          @media print {
+            @page {
+              margin: 8mm;
+              size: A4;
+            }
+            body { 
+              font-size: 10pt !important;
+              line-height: 1.2 !important;
+              color: black !important;
+              background: white !important;
+            }
+            .desktop-table th {
+              background: #0a2a6c !important;
+              color: white !important;
+              -webkit-print-color-adjust: exact !important;
+              print-color-adjust: exact !important;
+            }
+            .blue-separator,
+            .student-info::before,
+            .additional-info::before {
+              background: #0a2a6c !important;
+              -webkit-print-color-adjust: exact !important;
+              print-color-adjust: exact !important;
+            }
+          }
+        `;
+        
+        const style = document.createElement('style');
+        style.textContent = printCSS;
+        document.head.appendChild(style);
+        
+        // Hide elements for PDF
+        const elementsToHide = [
+          '.download-section',
+          '.floating-element',
+          '.loading-overlay',
+          '.back-btn'
+        ];
+        
+        const hiddenElements = [];
+        elementsToHide.forEach(selector => {
+          const elements = document.querySelectorAll(selector);
+          elements.forEach(el => {
+            if (el && el.style.display !== 'none') {
+              hiddenElements.push({ element: el, originalDisplay: el.style.display });
+              el.style.display = 'none';
+            }
+          });
+        });
+        
+        setTimeout(() => {
+          try {
+            requestAnimationFrame(() => {
+              window.print();
+              
+              const handlePrintComplete = () => {
+                // Restore hidden elements
+                hiddenElements.forEach(({ element, originalDisplay }) => {
+                  element.style.display = originalDisplay || '';
+                });
+                
+                // Remove print CSS
+                if (document.head.contains(style)) {
+                  document.head.removeChild(style);
+                }
+                
+                // Re-enable button
+                downloadBtn.disabled = false;
+                downloadBtn.style.opacity = '1';
+                downloadBtn.innerHTML = '<i class="fas fa-file-pdf"></i> Download Multi-Semester Result as PDF';
+                
+                showDownloadMessage('Multi-semester PDF generation completed! Check your browser\'s download folder.', 'success');
+              };
+              
+              if ('onafterprint' in window) {
+                window.addEventListener('afterprint', handlePrintComplete, { once: true });
+              } else {
+                setTimeout(handlePrintComplete, 2000);
+              }
+            });
+          } catch (printError) {
+            console.error('Print error:', printError);
+            showDownloadMessage('Print dialog failed to open. Please try again.', 'error');
+            
+            hiddenElements.forEach(({ element, originalDisplay }) => {
+              element.style.display = originalDisplay || '';
+            });
+            
+            downloadBtn.disabled = false;
+            downloadBtn.style.opacity = '1';
+            downloadBtn.innerHTML = '<i class="fas fa-file-pdf"></i> Download Multi-Semester Result as PDF';
+          }
+        }, 200);
+        
+      } catch (error) {
+        console.error('PDF download error:', error);
+        showDownloadMessage('Error preparing PDF. Please try again.', 'error');
+        
+        const downloadBtn = document.getElementById('downloadPdfBtn');
+        downloadBtn.disabled = false;
+        downloadBtn.style.opacity = '1';
+        downloadBtn.innerHTML = '<i class="fas fa-file-pdf"></i> Download Multi-Semester Result as PDF';
+      }
+    }
+    
+    // Show download status message with better positioning
+    function showDownloadMessage(message, type) {
+      const existingMessages = document.querySelectorAll('.download-message');
+      existingMessages.forEach(msg => msg.remove());
+      
+      const messageDiv = document.createElement('div');
+      messageDiv.className = 'download-message';
+      const backgroundColor = type === 'success' ? '#10b981' : type === 'error' ? '#ef4444' : '#3b82f6';
+      
+      messageDiv.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        padding: 15px 20px;
+        border-radius: 8px;
+        color: white;
+        font-weight: 600;
+        z-index: 100000;
+        animation: slideInRight 0.3s ease-out;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        background: ${backgroundColor};
+        max-width: 350px;
+        text-align: center;
+        font-size: 14px;
+        line-height: 1.4;
+      `;
+      messageDiv.textContent = message;
+      
+      document.body.appendChild(messageDiv);
+      
+      setTimeout(() => {
+        if (document.body.contains(messageDiv)) {
+          messageDiv.style.animation = 'slideOutRight 0.3s ease-out';
+          setTimeout(() => {
+            if (document.body.contains(messageDiv)) {
+              document.body.removeChild(messageDiv);
+            }
+          }, 300);
+        }
+      }, 4000);
+    }
+  </script>
+</body>
+</html>
